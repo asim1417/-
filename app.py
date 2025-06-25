@@ -1,47 +1,39 @@
 import streamlit as st
-import easyocr
-import tempfile
 import fitz  # PyMuPDF
-import os
-
-# إعداد القارئ
-reader = easyocr.Reader(['ar'])
+import easyocr
+import time
 
 st.set_page_config(page_title="محول الأحكام القضائية - OCR", layout="centered")
-st.title("📄 محول الأحكام القضائية إلى نص")
-st.markdown("قم برفع ملف PDF وسنقوم بتحويله إلى نص قابل للنسخ باستخدام تقنية EasyOCR")
+st.title("📄 محول الأحكام القضائية إلى نص 🧠")
+st.markdown("قم برفع ملف PDF وسنقوم بتحويله إلى نص قابل للنسخ (OCR) باستخدام EasyOCR")
 
 uploaded_file = st.file_uploader("🔼 ارفع ملف PDF", type=["pdf"])
 
 if uploaded_file:
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
-        tmp_file.write(uploaded_file.read())
-        tmp_path = tmp_file.name
+    with open("temp.pdf", "wb") as f:
+        f.write(uploaded_file.read())
 
-    full_text = ""
-    doc = fitz.open(tmp_path)
-    num_pages = len(doc)
+    with st.spinner("⏳ جاري المعالجة..."):
+        start_time = time.time()
+        doc = fitz.open("temp.pdf")
+        reader = easyocr.Reader(['ar'])
 
-    with st.spinner("🔍 جاري استخراج النص من الصفحات..."):
-        for i, page in enumerate(doc):
+        all_text = ""
+        for page_number in range(len(doc)):
+            page = doc.load_page(page_number)
             pix = page.get_pixmap(dpi=300)
-            img_path = f"page_{i}.png"
-            pix.save(img_path)
+            image_bytes = pix.tobytes("png")
+            result = reader.readtext(image_bytes, detail=0, paragraph=True)
+            all_text += "\n".join(result) + "\n\n"
 
-            result = reader.readtext(img_path, detail=0, paragraph=True)
-            full_text += "\n".join(result) + "\n\n"
+        elapsed = time.time() - start_time
 
-            os.remove(img_path)
+    st.success(f"✅ تمت المعالجة في {elapsed:.2f} ثانية")
+    st.text_area("📋 النص المستخرج:", all_text, height=400)
 
-    st.success("✅ تم استخراج النص بنجاح")
-    st.text_area("📋 النص المستخرج:", full_text, height=400)
-
-    if st.button("📥 تحميل النص"):
-        st.download_button(
-            label="⬇️ تحميل الملف النصي",
-            data=full_text,
-            file_name="ocr_output.txt",
-            mime="text/plain"
-        )
-
-    os.remove(tmp_path)
+    st.download_button(
+        label="⬇️ تحميل الملف النصي",
+        data=all_text,
+        file_name="ocr_output.txt",
+        mime="text/plain"
+    )
