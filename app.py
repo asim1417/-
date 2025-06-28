@@ -1,39 +1,46 @@
 import streamlit as st
-import fitz  # PyMuPDF
 import easyocr
-import time
+import tempfile
+import os
 
-st.set_page_config(page_title="محول الأحكام القضائية - OCR", layout="centered")
+# إعداد الواجهة
+st.set_page_config(page_title="محول الأحكام القضائية", layout="centered")
 st.title("📄 محول الأحكام القضائية إلى نص 🧠")
-st.markdown("قم برفع ملف PDF وسنقوم بتحويله إلى نص قابل للنسخ (OCR) باستخدام EasyOCR")
+st.markdown("قم برفع ملف PDF (صفحة واحدة أو أكثر) وسنقوم بتحويله إلى نص قابل للنسخ باستخدام OCR")
 
 uploaded_file = st.file_uploader("🔼 ارفع ملف PDF", type=["pdf"])
 
 if uploaded_file:
-    with open("temp.pdf", "wb") as f:
-        f.write(uploaded_file.read())
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+        tmp_file.write(uploaded_file.read())
+        tmp_path = tmp_file.name
 
-    with st.spinner("⏳ جاري المعالجة..."):
-        start_time = time.time()
-        doc = fitz.open("temp.pdf")
-        reader = easyocr.Reader(['ar'])
+    st.info("📖 جاري استخراج الصور من صفحات PDF...")
 
-        all_text = ""
-        for page_number in range(len(doc)):
-            page = doc.load_page(page_number)
-            pix = page.get_pixmap(dpi=300)
-            image_bytes = pix.tobytes("png")
-            result = reader.readtext(image_bytes, detail=0, paragraph=True)
-            all_text += "\n".join(result) + "\n\n"
+    from pdf2image import convert_from_path
+    try:
+        images = convert_from_path(tmp_path)
+    except Exception as e:
+        st.error("⚠️ تعذر تحويل PDF إلى صور. تأكد من أن الملف سليم وأن النظام يدعم Poppler.")
+        st.stop()
 
-        elapsed = time.time() - start_time
+    reader = easyocr.Reader(['ar'], gpu=False)
 
-    st.success(f"✅ تمت المعالجة في {elapsed:.2f} ثانية")
-    st.text_area("📋 النص المستخرج:", all_text, height=400)
+    full_text = ""
+    for i, image in enumerate(images):
+        st.info(f"🔍 معالجة الصفحة {i+1} من {len(images)}...")
+        result = reader.readtext(image, detail=0, paragraph=True)
+        page_text = "\n".join(result)
+        full_text += f"صفحة {i+1}:\n{page_text}\n\n"
+
+    st.success("✅ تم استخراج النص بنجاح")
+    st.text_area("📋 النص المستخرج:", full_text, height=400)
 
     st.download_button(
         label="⬇️ تحميل الملف النصي",
-        data=all_text,
+        data=full_text,
         file_name="ocr_output.txt",
         mime="text/plain"
     )
+
+    st.caption("جميع المعالجة تتم باستخدام مكتبة EasyOCR وداخل الخادم.")
