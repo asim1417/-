@@ -44,3 +44,4 @@ if uploaded_file:
     )
 
     st.caption("جميع المعالجة تتم باستخدام مكتبة EasyOCR وداخل الخادم.")
+
