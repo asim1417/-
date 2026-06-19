@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+dist/
+
+# Environment
+.env
+
+# Generated reports (keep the folder, ignore generated artifacts)
+reports/*
+!reports/.gitkeep
+!reports/screenshots/.gitkeep
+
+# OS / editor
+.DS_Store
+*.log

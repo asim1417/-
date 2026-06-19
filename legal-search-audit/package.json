@@ -1,0 +1,38 @@
+{
+  "name": "legal-search-audit",
+  "version": "1.0.0",
+  "description": "Professional UX / search-engine audit tool for Saudi legal-search platforms (Qanoniah & Qistas). Descriptive and analytical only — never scrapes databases or bypasses subscriptions.",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "legal-search-audit": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "ts-node src/index.ts",
+    "audit": "ts-node src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "postinstall": "playwright install chromium || true"
+  },
+  "keywords": [
+    "audit",
+    "ux",
+    "legal-search",
+    "playwright",
+    "accessibility",
+    "seo",
+    "performance"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  }
+}
