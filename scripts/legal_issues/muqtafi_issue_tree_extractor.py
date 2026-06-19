@@ -134,21 +134,51 @@ LEGAL_NAV_HINTS = [
 # Procedural / enforcement issue keywords.
 PROCEDURAL_ISSUES = [
     "الاختصاص",
+    "الاختصاص النوعي",
+    "الاختصاص المكاني",
+    "الاختصاص القيمي",
     "الدعوى",
     "قيد الدعوى",
+    "رفع الدعوى",
+    "شطب الدعوى",
+    "ترك الخصومة",
+    "وقف الدعوى",
     "التبليغ",
+    "الإعلان",
+    "المواعيد",
+    "الحضور",
+    "الغياب",
+    "التمثيل",
+    "الوكالة",
     "الدفوع",
+    "الدفع بعدم الاختصاص",
+    "الدفع بالبطلان",
     "الطلبات العارضة",
+    "الإدخال",
+    "التدخل",
     "الإثبات",
+    "البينة",
     "الشهادة",
     "الإقرار",
     "اليمين",
     "الخبرة",
+    "المعاينة",
+    "القرائن",
     "الأحكام",
+    "تسبيب الحكم",
+    "حجية الحكم",
+    "تصحيح الحكم",
+    "تفسير الحكم",
     "الاستئناف",
     "النقض",
+    "التماس إعادة النظر",
+    "اعتراض الغير",
     "التنفيذ",
+    "التنفيذ الجبري",
+    "السند التنفيذي",
     "الحجز",
+    "الحجز التحفظي",
+    "الحجز التنفيذي",
     "بيع الأموال المحجوزة",
     "حبس المدين",
     "إلغاء الحجز",
@@ -156,26 +186,94 @@ PROCEDURAL_ISSUES = [
     "الأمور المستعجلة",
     "الطعن",
     "البطلان",
+    "الرسوم",
+    "المصاريف",
+    "التقادم",
+    "المهل",
+    "النفاذ المعجل",
 ]
 
 # Substantive issue keywords.
 SUBSTANTIVE_ISSUES = [
     "العقد",
+    "الالتزام",
+    "الإيجاب",
+    "القبول",
+    "الأهلية",
+    "الرضا",
+    "العيب",
+    "الغلط",
+    "التدليس",
+    "الإكراه",
+    "الاستغلال",
     "الفسخ",
+    "الإبطال",
     "التعويض",
     "الضرر",
     "المسؤولية",
+    "المسؤولية التقصيرية",
+    "المسؤولية العقدية",
     "الرهن",
+    "الرهن الرسمي",
+    "الرهن الحيازي",
+    "الكفالة",
+    "الضمان",
     "الملكية",
+    "الشيوع",
     "الحيازة",
+    "الارتفاق",
+    "الشفعة",
+    "الوصية",
+    "الميراث",
+    "الهبة",
+    "البيع",
+    "الإيجار",
+    "الوكالة",
     "الشركة",
     "الإفلاس",
+    "الصلح الواقي",
     "العمل",
+    "عقد العمل",
+    "الأجر",
+    "إصابة العمل",
+    "فصل تعسفي",
     "الأحوال الشخصية",
     "الزواج",
     "الطلاق",
     "النفقة",
-    "الميراث",
+    "الحضانة",
+    "النسب",
+    "الجريمة",
+    "العقوبة",
+    "الشروع",
+    "المساهمة الجنائية",
+    "الدفاع الشرعي",
+]
+
+# Deontic / normative markers: a sentence containing one of these usually states
+# a legal rule, so it is captured as a rule candidate even with no keyword hit.
+DEONTIC_MARKERS = [
+    "يجوز",
+    "لا يجوز",
+    "يحظر",
+    "يمنع",
+    "يجب",
+    "يلتزم",
+    "يلزم",
+    "يعاقب",
+    "يعفى",
+    "يبطل",
+    "يقع باطلا",
+    "يسقط",
+    "ينقضي",
+    "يترتب",
+    "يشترط",
+    "يحق",
+    "للمحكمة أن",
+    "على المحكمة",
+    "للدائن",
+    "للمدين",
+    "للخصوم",
 ]
 
 ISSUE_PATTERNS = PROCEDURAL_ISSUES + SUBSTANTIVE_ISSUES
@@ -425,6 +523,17 @@ def classify_issue_keyword(key: str) -> str:
     return TYPE_LEGAL_ISSUE
 
 
+# Domains whose rules are primarily procedural in nature.
+PROCEDURAL_DOMAINS = {"التنفيذ", "المرافعات والإجراءات", "الإثبات"}
+
+
+def rule_type_for_domain(domain: Optional[str]) -> str:
+    """Pick a candidate type for a normative-rule sentence based on its domain."""
+    if domain in PROCEDURAL_DOMAINS:
+        return TYPE_PROCEDURE
+    return TYPE_LEGAL_ISSUE
+
+
 # ---------------------------------------------------------------------------
 # Confidence scoring
 # ---------------------------------------------------------------------------
@@ -665,6 +774,40 @@ def extract_issue_candidates(html: str, url: str) -> list[IssueCandidate]:
                         has_law=has_law,
                         has_domain=has_domain,
                         frequency=freq.get(key, 0),
+                    ),
+                    needs_human_review=True,
+                )
+            )
+
+        # 3c. Normative rules: any sentence stating an obligation / permission /
+        # prohibition is a legal-rule candidate, even with no keyword match.
+        for sentence in re.split(r"[\.؛]\s*", window):
+            sent = clean_text(sentence)
+            norm_sent = normalize_arabic(sent)
+            if len(sent) < 12:
+                continue
+            marker = next(
+                (m for m in DEONTIC_MARKERS if normalize_arabic(m) in norm_sent), None
+            )
+            if marker is None:
+                continue
+            snippet = sent if len(sent) <= 260 else sent[:260].rsplit(" ", 1)[0] + "…"
+            results.append(
+                IssueCandidate(
+                    source="Muqtafi / Birzeit",
+                    jurisdiction="PS",
+                    domain=domain,
+                    law_name=law_name,
+                    chapter=current_chapter,
+                    issue_candidate=snippet,
+                    candidate_type=rule_type_for_domain(domain),
+                    issue_level=4,
+                    aliases=candidate_aliases(sent),
+                    evidence=Evidence(
+                        url=url, text_snippet=snippet, article_number=article_no
+                    ),
+                    confidence=score_candidate(
+                        0.50, has_law=has_law, has_domain=has_domain
                     ),
                     needs_human_review=True,
                 )
