@@ -1,0 +1,41 @@
+id,category,query,expected_intent,expected_sources,notes
+q01,literal,المادة 77 من نظام العمل,find_specific_article,نظام العمل,بحث لفظي مباشر عن مادة محددة
+q02,literal,التعويض عن الضرر في نظام المعاملات المدنية,find_topic_in_system,نظام المعاملات المدنية,موضوع داخل نظام
+q03,literal,شروط صحة العقد,find_legal_concept,نظام المعاملات المدنية,مفهوم قانوني عام
+q04,literal,الدفع بعدم الاختصاص النوعي,find_procedural_concept,نظام المرافعات الشرعية,دفع إجرائي
+q05,literal,حجية المحررات الإلكترونية,find_legal_concept,نظام الإثبات,موضوع نظامي
+q06,literal,الاعتراض على حكم تجاري,find_procedure,الأنظمة التجارية والقضائية,إجراء قضائي
+q07,literal,فسخ العقد للإخلال الجوهري,find_legal_concept,نظام المعاملات المدنية,مفهوم تعاقدي
+q08,literal,إثبات التملك بدون صك,find_topic,نظام الإثبات,موضوع متخصص
+q09,article_number,نظام التنفيذ المادة 46,find_specific_article,نظام التنفيذ,بحث برقم المادة واسم النظام
+q10,literal,الاختصاص المكاني في نظام المرافعات,find_topic_in_system,نظام المرافعات الشرعية,موضوع إجرائي
+q11,literal,المسؤولية التقصيرية,find_legal_concept,نظام المعاملات المدنية,مفهوم قانوني
+q12,literal,التعويض عن التأخير في تسليم المشروع,find_topic,أحكام/أنظمة المقاولات,موضوع تطبيقي
+q13,literal,أتعاب المحاماة في القضاء السعودي,find_topic,نظام المحاماة,موضوع مهني
+q14,literal,نظام الإثبات الشهادة,find_topic_in_system,نظام الإثبات,بحث عن باب داخل نظام
+q15,literal,دعوى بطلان حكم تحكيم,find_procedure,نظام التحكيم,إجراء تحكيمي
+q16,natural_question,متى يكون العقد باطلًا؟,answer_question,نظام المعاملات المدنية,سؤال طبيعي
+q17,natural_question,هل يحق للعامل التعويض إذا فصل بدون سبب؟,answer_question,نظام العمل,سؤال طبيعي عمالي
+q18,natural_question,كيف أعترض على حكم تجاري؟,answer_question,الأنظمة القضائية التجارية,سؤال إجرائي
+q19,semantic,الفرق بين الفسخ والبطلان,semantic_distinction,نظام المعاملات المدنية,تمييز دلالي بين مفهومين
+q20,semantic,حجية التوقيع الإلكتروني,find_legal_concept,نظام التعاملات الإلكترونية,قريب دلاليًا من حجية المحررات
+q21,literal,التنفيذ على أموال المدين,find_topic,نظام التنفيذ,موضوع تنفيذي
+q22,literal,الاختصاص الولائي للمحاكم,find_legal_concept,نظام القضاء,مفهوم اختصاص
+q23,literal,الدفع بعدم قبول الدعوى,find_procedural_concept,نظام المرافعات الشرعية,دفع إجرائي
+q24,literal,سقوط الحق بالتقادم,find_legal_concept,نظام المعاملات المدنية,مفهوم زمني
+q25,literal,التعويض عن الضرر المعنوي,find_legal_concept,نظام المعاملات المدنية,موضوع تعويضي
+q26,article_number,المادة 77 نظام العمل,article_recognition,نظام العمل,صيغة رقم المادة بدون "من"
+q27,article_number,مادة 46 تنفيذ,article_recognition,نظام التنفيذ,صيغة مختصرة لرقم المادة
+q28,article_number,المادة 29 نظام الإثبات,article_recognition,نظام الإثبات,ربط الرقم بالنظام الصحيح
+q29,numerals,المادة ٤٦,arabic_indic_numerals,نظام التنفيذ,أرقام هندية للمادة
+q30,numerals,مادة ٧٧,arabic_indic_numerals,نظام العمل,أرقام هندية بدون أداة تعريف
+q31,spelling,نضام العمل,spelling_tolerance,نظام العمل,خطأ إملائي: نضام بدل نظام
+q32,spelling,المرفعات الشرعية,spelling_tolerance,نظام المرافعات الشرعية,خطأ إملائي: المرفعات بدل المرافعات
+q33,spelling,التنفيذ الماده ٤٦,spelling_tolerance,نظام التنفيذ,خطأ إملائي: الماده + أرقام هندية
+q34,spelling,المعملات المدنية,spelling_tolerance,نظام المعاملات المدنية,خطأ إملائي: المعملات بدل المعاملات
+q35,spelling,الاختصاص النوعى,spelling_tolerance,نظام المرافعات الشرعية,خطأ إملائي في الياء النهائية
+q36,diacritics_hamza,الاثبات,hamza_tolerance,نظام الإثبات,حذف الهمزة: الاثبات بدل الإثبات
+q37,diacritics_hamza,المسئولية,hamza_tolerance,نظام المعاملات المدنية,اختلاف الهمزة: المسئولية بدل المسؤولية
+q38,diacritics_hamza,احكام,hamza_tolerance,الأحكام القضائية,حذف الهمزة: احكام بدل أحكام
+q39,semantic,إنهاء العقد,semantic_synonym,نظام العمل/المعاملات المدنية,مرادف دلالي لـ فسخ العقد
+q40,semantic,قوة الإثبات,semantic_synonym,نظام الإثبات,قريب دلاليًا من حجية
