@@ -1,12 +1,12 @@
 # تقرير استخراج شجرة المسائل القانونية — الموسوعة القانونية المصرية
 
-- التاريخ: 2026-06-20 02:54:42
+- التاريخ: 2026-06-20 03:05:21
 - المصدر: Egyptian Legal Encyclopedia (EG)
-- روابط البداية: https://w.emj-eg.com/, https://serviceapi.egyptianlaws.com/
+- روابط البداية: https://w.emj-eg.com/, https://w.emj-eg.com/AhkamT/Index?id=1, https://w.emj-eg.com/AhkamT/Index?id=2, https://w.emj-eg.com/AhkamT/Index?id=4, https://w.emj-eg.com/AhkamT/Index?id=6, https://w.emj-eg.com/AhkamT/Index?id=7, https://w.emj-eg.com/AhkamSerach, https://eg-pp.com/, https://eg-pp.com/TAShSearch, https://eg-pp.com/AhkamSerach/cindex, https://serviceapi.egyptianlaws.com/
 
 ## ملخص التشغيل
 - عدد الصفحات التي تمت زيارتها: **0**
-- عدد الروابط التي تم تجاهلها: **4**
+- عدد الروابط التي تم تجاهلها: **0**
 - عدد العقد المستخرجة: **57**
 - عدد أخطاء التحقق من المخطط (schema): **0**
 
@@ -37,10 +37,7 @@
 - القاموس القانوني: 3
 
 ## الروابط المتجاهَلة (عينة)
-- `robots_disallow` — https://w.emj-eg.com/
-- `robots_disallow` — https://serviceapi.egyptianlaws.com/
-- `robots_disallow` — https://w.emj-eg.com/sitemap.xml
-- `robots_disallow` — https://serviceapi.egyptianlaws.com/sitemap.xml
+- لا يوجد.
 
 ## الأخطاء
 - لا توجد أخطاء مسجّلة.

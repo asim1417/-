@@ -609,6 +609,7 @@ SEED_TREE: Dict[str, Any] = {
     "children": [
         {
             "title": "موسوعة التشريعات",
+            "url": "https://eg-pp.com/TAShSearch",
             "children": [
                 {"title": "القانون المدني"},
                 {"title": "قانون العقوبات"},
@@ -672,6 +673,7 @@ SEED_TREE: Dict[str, Any] = {
         },
         {
             "title": "موسوعة النيابة",
+            "url": "https://eg-pp.com/",
             "children": [
                 {
                     "title": "القيود والأوصاف",

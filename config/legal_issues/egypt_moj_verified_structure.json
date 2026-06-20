@@ -9,8 +9,17 @@
     "https://p.w.emj-eg.com/"
   ],
   "search_endpoints": [
-    "https://w.emj-eg.com/AhkamSerach"
+    "https://w.emj-eg.com/AhkamSerach",
+    "https://eg-pp.com/AhkamSerach/cindex",
+    "https://eg-pp.com/TAShSearch",
+    "https://www.emj-eg.com/home/LastData?tbindex=1"
   ],
+  "legislation_encyclopedia": {
+    "search": "https://eg-pp.com/TAShSearch",
+    "single_item_pattern": "https://eg-pp.com/ExpanSingleTash?Tash_id={id}",
+    "official_portal": "https://elpai.idsc.gov.eg/",
+    "import_books": "https://emj-eg.com/ImportBooks"
+  },
   "judgments_encyclopedia_index": {
     "pattern": "https://w.emj-eg.com/AhkamT/Index?id={id}",
     "verified_ids": {

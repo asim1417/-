@@ -1,40 +1,29 @@
 {
-  "started_at": "2026-06-20T02:54:41",
-  "elapsed_seconds": 0.76,
+  "started_at": "2026-06-20T03:05:21",
+  "elapsed_seconds": 0.04,
   "user_agent": "HakeemLegalIssuesResearchBot/0.1",
   "start_urls": [
     "https://w.emj-eg.com/",
+    "https://w.emj-eg.com/AhkamT/Index?id=1",
+    "https://w.emj-eg.com/AhkamT/Index?id=2",
+    "https://w.emj-eg.com/AhkamT/Index?id=4",
+    "https://w.emj-eg.com/AhkamT/Index?id=6",
+    "https://w.emj-eg.com/AhkamT/Index?id=7",
+    "https://w.emj-eg.com/AhkamSerach",
+    "https://eg-pp.com/",
+    "https://eg-pp.com/TAShSearch",
+    "https://eg-pp.com/AhkamSerach/cindex",
     "https://serviceapi.egyptianlaws.com/"
   ],
   "max_pages": 5,
   "delay": 0.0,
   "timeout": 20.0,
-  "network_attempted": true,
+  "network_attempted": false,
   "max_depth": 3,
   "input_dir": null,
-  "sitemaps_seen": [
-    "https://w.emj-eg.com/sitemap.xml",
-    "https://serviceapi.egyptianlaws.com/sitemap.xml"
-  ],
+  "sitemaps_seen": [],
   "pages_visited": [],
-  "links_skipped": [
-    {
-      "url": "https://w.emj-eg.com/",
-      "reason": "robots_disallow"
-    },
-    {
-      "url": "https://serviceapi.egyptianlaws.com/",
-      "reason": "robots_disallow"
-    },
-    {
-      "url": "https://w.emj-eg.com/sitemap.xml",
-      "reason": "robots_disallow"
-    },
-    {
-      "url": "https://serviceapi.egyptianlaws.com/sitemap.xml",
-      "reason": "robots_disallow"
-    }
-  ],
+  "links_skipped": [],
   "errors": [],
   "seed_nodes": 57,
   "local_nodes": 0,
