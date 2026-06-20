@@ -269,6 +269,101 @@ SECTIONS: List[Dict[str, Any]] = [
 
 
 # --------------------------------------------------------------------------- #
+# الربط بالأنظمة السعودية (الباب/العقد + مرجع المادة + المصدر الرسمي)
+# --------------------------------------------------------------------------- #
+# روابط الأنظمة الرسمية
+NIZAM_URLS = {
+    "المعاملات المدنية": "https://laws.moj.gov.sa/ar/legislation/PBbHmywh1XMp-Kyv3NtQLg",
+    "الأحوال الشخصية": "https://laws.boe.gov.sa/BoeLaws/Laws/LawDetails/4d72d829-947b-45d5-b9b5-ae5800d6bac2/1",
+    "المرافعات": "https://laws.moj.gov.sa/ar/",
+    "الإثبات": "https://laws.moj.gov.sa/ar/",
+    "الشركات": "https://laws.moj.gov.sa/ar/",
+    "الإفلاس": "https://laws.moj.gov.sa/ar/",
+    "التحكيم": "https://laws.moj.gov.sa/ar/",
+    "جزائي": "https://laws.moj.gov.sa/ar/",
+    "عام": "https://laws.moj.gov.sa/ar/",
+}
+
+# مرجع المادة: نُدرج النطاق المؤكَّد فقط؛ وما عداه "يُحدَّد بالمراجعة" تفاديًا للتخمين.
+_ART_TBD = "يُحدَّد بالمراجعة"
+
+# خريطة الكتاب الفقهي → (النظام، الباب/العقد النظامي، مرجع المادة، مفتاح الرابط)
+BOOK_NIZAM_MAP: Dict[str, Tuple[str, str, str, str]] = {
+    # ---- نظام المعاملات المدنية ----
+    "البيع": ("نظام المعاملات المدنية", "العقود المسماة > العقود الناقلة للملكية > عقد البيع", _ART_TBD, "المعاملات المدنية"),
+    "الربا والصرف": ("نظام المعاملات المدنية", "أحكام العقد > محل العقد ومشروعيته (مع مراعاة منع الربا)", _ART_TBD, "المعاملات المدنية"),
+    "السَّلَم والاستصناع": ("نظام المعاملات المدنية", "العقود الناقلة للملكية > البيع / الاستصناع", _ART_TBD, "المعاملات المدنية"),
+    "الخيارات": ("نظام المعاملات المدنية", "أحكام العقد > الخيارات وفسخ العقد والعيوب", _ART_TBD, "المعاملات المدنية"),
+    "المرابحة والتولية": ("نظام المعاملات المدنية", "العقود الناقلة للملكية > عقد البيع (المرابحة)", _ART_TBD, "المعاملات المدنية"),
+    "الإجارة": ("نظام المعاملات المدنية", "العقود المسماة > عقد الإيجار", _ART_TBD, "المعاملات المدنية"),
+    "الشركة": ("نظام الشركات / نظام المعاملات المدنية", "عقود المشاركات > عقد الشركة", _ART_TBD, "الشركات"),
+    "المضاربة (القِراض)": ("نظام المعاملات المدنية", "عقود المشاركات > عقد المضاربة", _ART_TBD, "المعاملات المدنية"),
+    "المزارعة والمساقاة": ("نظام المعاملات المدنية", "عقود المشاركات > عقد المشاركة في الناتج (المزارعة/المساقاة)", _ART_TBD, "المعاملات المدنية"),
+    "الرهن": ("نظام المعاملات المدنية", "الحقوق العينية التبعية (التأمينات) > الرهن", _ART_TBD, "المعاملات المدنية"),
+    "الضمان والكفالة": ("نظام المعاملات المدنية", "العقود المسماة > عقد الكفالة", _ART_TBD, "المعاملات المدنية"),
+    "الحوالة": ("نظام المعاملات المدنية", "انتقال الالتزام > حوالة الحق وحوالة الدين", _ART_TBD, "المعاملات المدنية"),
+    "الوكالة": ("نظام المعاملات المدنية", "العقود الواردة على العمل > عقد الوكالة", _ART_TBD, "المعاملات المدنية"),
+    "الصلح": ("نظام المعاملات المدنية", "العقود الناقلة للملكية > عقد الصلح", _ART_TBD, "المعاملات المدنية"),
+    "الشُّفعة": ("نظام المعاملات المدنية", "الحقوق العينية الأصلية > الملكية > الشفعة", _ART_TBD, "المعاملات المدنية"),
+    "الهبة": ("نظام المعاملات المدنية", "العقود الناقلة للملكية > عقد الهبة", _ART_TBD, "المعاملات المدنية"),
+    "العارية": ("نظام المعاملات المدنية", "العقود المسماة > العارية / الانتفاع", _ART_TBD, "المعاملات المدنية"),
+    "الوديعة": ("نظام المعاملات المدنية", "العقود الواردة على العمل > عقد الإيداع", _ART_TBD, "المعاملات المدنية"),
+    "الغصب والإتلاف": ("نظام المعاملات المدنية", "مصادر الالتزام > الفعل الضار (الضرر والتعويض)", _ART_TBD, "المعاملات المدنية"),
+    "اللقطة واللقيط": ("نظام المعاملات المدنية / الأحوال الشخصية", "الفعل النافع (الإثراء بلا سبب) + أحكام اللقيط", _ART_TBD, "المعاملات المدنية"),
+    "إحياء الموات": ("نظام المعاملات المدنية", "الحقوق العينية الأصلية > الملكية وأسباب كسبها", _ART_TBD, "المعاملات المدنية"),
+    "الوقف": ("أنظمة الأوقاف", "أحكام الوقف (ترتيبات الهيئة العامة للأوقاف)", _ART_TBD, "عام"),
+    "القِسمة": ("نظام المعاملات المدنية", "الحقوق العينية > الملكية الشائعة والقسمة", _ART_TBD, "المعاملات المدنية"),
+    "الجَعالة والسَّبق": ("نظام المعاملات المدنية", "مصادر الالتزام > الإرادة المنفردة (الوعد بجائزة/الجعالة)", _ART_TBD, "المعاملات المدنية"),
+    "القرض": ("نظام المعاملات المدنية", "العقود الناقلة للملكية > عقد القرض", _ART_TBD, "المعاملات المدنية"),
+    "التفليس والحجر": ("نظام الإفلاس / نظام المعاملات المدنية", "الأشخاص والأهلية (الحجر) + إجراءات الإفلاس", _ART_TBD, "الإفلاس"),
+    "بيوع ومعاملات معاصرة": ("أنظمة خاصة + المعاملات المدنية", "العقود غير المسماة + أنظمة (الأوراق التجارية/التمويل/التأمين)", _ART_TBD, "المعاملات المدنية"),
+    # ---- نظام الأحوال الشخصية (252 مادة، 8 أبواب) ----
+    "النكاح": ("نظام الأحوال الشخصية", "الباب الأول: الزواج (الأركان والشروط)", _ART_TBD, "الأحوال الشخصية"),
+    "الصداق (المهر)": ("نظام الأحوال الشخصية", "الباب الأول: الزواج (الصداق)", _ART_TBD, "الأحوال الشخصية"),
+    "العشرة وحقوق الزوجين": ("نظام الأحوال الشخصية", "الباب الأول: الزواج (حقوق الزوجين)", _ART_TBD, "الأحوال الشخصية"),
+    "الطلاق": ("نظام الأحوال الشخصية", "الباب الثالث: الفرقة بين الزوجين > الطلاق", _ART_TBD, "الأحوال الشخصية"),
+    "الخلع": ("نظام الأحوال الشخصية", "الباب الثالث: الفرقة بين الزوجين > الخلع", _ART_TBD, "الأحوال الشخصية"),
+    "الرجعة": ("نظام الأحوال الشخصية", "الباب الثالث: الفرقة بين الزوجين (الرجعة)", _ART_TBD, "الأحوال الشخصية"),
+    "الإيلاء والظهار": ("نظام الأحوال الشخصية", "الباب الثالث: الفرقة (فسخ الزواج وأسبابه)", _ART_TBD, "الأحوال الشخصية"),
+    "اللعان": ("نظام الأحوال الشخصية", "الباب الثاني/الثالث: النسب واللعان", _ART_TBD, "الأحوال الشخصية"),
+    "العِدّة والاستبراء": ("نظام الأحوال الشخصية", "الباب الرابع: آثار الفرقة > العدة", _ART_TBD, "الأحوال الشخصية"),
+    "الرضاع": ("نظام الأحوال الشخصية", "الباب الثاني: آثار عقد الزواج > النسب/الرضاع", _ART_TBD, "الأحوال الشخصية"),
+    "النفقات": ("نظام الأحوال الشخصية", "الباب الثاني: آثار عقد الزواج > النفقة", _ART_TBD, "الأحوال الشخصية"),
+    "الحضانة": ("نظام الأحوال الشخصية", "الباب الرابع: آثار الفرقة > الحضانة", _ART_TBD, "الأحوال الشخصية"),
+    "النسب": ("نظام الأحوال الشخصية", "الباب الثاني: آثار عقد الزواج > النسب", _ART_TBD, "الأحوال الشخصية"),
+    "الفرائض (المواريث)": ("نظام الأحوال الشخصية", "الباب السابع: التركة والإرث", _ART_TBD, "الأحوال الشخصية"),
+    "الوصايا": ("نظام الأحوال الشخصية", "الباب السادس: الوصية", _ART_TBD, "الأحوال الشخصية"),
+    # ---- الجنايات والحدود (غير مقننة في نظام عقوبات عام) ----
+    "الجنايات والقصاص": ("أحكام شرعية + أنظمة جزائية", "القصاص (أحكام شرعية) + نظام الإجراءات الجزائية", _ART_TBD, "جزائي"),
+    "الديات": ("أحكام شرعية + أنظمة", "الديات (أحكام شرعية) + اللائحة/الجداول المعتمدة", _ART_TBD, "جزائي"),
+    "القسامة": ("أحكام شرعية", "القسامة (أحكام شرعية قضائية)", _ART_TBD, "جزائي"),
+    "حد الزنا": ("أحكام شرعية (حدود)", "حد الزنا (أحكام شرعية)", _ART_TBD, "جزائي"),
+    "حد القذف": ("أحكام شرعية (حدود)", "حد القذف (أحكام شرعية) + أنظمة الحماية من الإيذاء", _ART_TBD, "جزائي"),
+    "حد السرقة": ("أحكام شرعية (حدود)", "حد السرقة (أحكام شرعية) + الأنظمة الجزائية", _ART_TBD, "جزائي"),
+    "حد الحرابة": ("أحكام شرعية (حدود)", "الحرابة (أحكام شرعية) + أنظمة جزائية خاصة", _ART_TBD, "جزائي"),
+    "حد الشرب والمسكر": ("أحكام شرعية + أنظمة", "المسكرات (أحكام شرعية) + نظام مكافحة المخدرات", _ART_TBD, "جزائي"),
+    "الردة والبغي": ("أحكام شرعية", "الردة والبغي (أحكام شرعية قضائية)", _ART_TBD, "جزائي"),
+    "التعزير": ("أنظمة جزائية تعزيرية", "العقوبات التعزيرية (الأنظمة الجزائية والمرجعية القضائية)", _ART_TBD, "جزائي"),
+    # ---- القضاء والإثبات والأيمان ----
+    "القضاء": ("نظام المرافعات الشرعية", "الاختصاص والولاية القضائية", _ART_TBD, "المرافعات"),
+    "الدعوى": ("نظام المرافعات الشرعية", "رفع الدعوى وقيدها وشروط قبولها", _ART_TBD, "المرافعات"),
+    "البينات والقرائن": ("نظام الإثبات", "أدلة الإثبات والقرائن", _ART_TBD, "الإثبات"),
+    "الشهادة": ("نظام الإثبات", "الشهادة (الباب الخاص بالشهادة)", _ART_TBD, "الإثبات"),
+    "اليمين والنكول": ("نظام الإثبات", "اليمين (الباب الخاص باليمين)", _ART_TBD, "الإثبات"),
+    "الإقرار": ("نظام الإثبات", "الإقرار (الباب الخاص بالإقرار)", _ART_TBD, "الإثبات"),
+    "التحكيم والصلح القضائي": ("نظام التحكيم / المرافعات الشرعية", "التحكيم + الصلح القضائي", _ART_TBD, "التحكيم"),
+    "الأيمان والنذور والكفارات": ("أحكام شرعية عامة", "خارج التقنين النظامي (مرجعية شرعية)", _ART_TBD, "عام"),
+}
+
+
+def nizam_mapping(book_title: str, default_nizam: str) -> Tuple[str, str, str, str]:
+    """يُعيد (النظام، الباب/العقد النظامي، مرجع المادة، رابط النظام)."""
+    nizam, chapter, art, url_key = BOOK_NIZAM_MAP.get(
+        book_title, (default_nizam, _ART_TBD, _ART_TBD, "عام"))
+    return nizam, chapter, art, NIZAM_URLS.get(url_key, NIZAM_URLS["عام"])
+
+
+# --------------------------------------------------------------------------- #
 # المواءمة السعودية ومسار حكيم
 # --------------------------------------------------------------------------- #
 
@@ -303,7 +398,9 @@ def issue_confidence(dim_key: str) -> float:
 def build_record(*, title: str, level: int, parent_title: str, node_type: str,
                  section: str, book: str, saudi_domain: str, saudi_nizam: str,
                  hakeem_path: str, confidence: float, selector: str,
-                 source_url: str) -> "OrderedDict[str, Any]":
+                 source_url: str, nizam_chapter: str = "—",
+                 article_ref: str = "—", nizam_url: str = "—"
+                 ) -> "OrderedDict[str, Any]":
     rec: "OrderedDict[str, Any]" = OrderedDict()
     rec["source"] = SOURCE_NAME
     rec["source_url"] = source_url
@@ -317,6 +414,9 @@ def build_record(*, title: str, level: int, parent_title: str, node_type: str,
     rec["book"] = book
     rec["suggested_saudi_domain"] = saudi_domain
     rec["suggested_saudi_nizam"] = saudi_nizam
+    rec["suggested_saudi_nizam_chapter"] = nizam_chapter
+    rec["suggested_saudi_article_ref"] = article_ref
+    rec["saudi_nizam_url"] = nizam_url
     rec["suggested_hakeem_issue_path"] = hakeem_path
     rec["mapping_type"] = MAPPING_TYPE
     rec["confidence"] = confidence
@@ -359,16 +459,23 @@ def generate() -> Tuple[List["OrderedDict[str, Any]"], "OrderedDict[str, Any]"]:
         ))
 
         for bk in sec["books"]:
-            b_type, b_domain, b_nizam = book_overrides(
+            b_type, b_domain, _bn = book_overrides(
                 bk["title"], sec["node_type"], sec["saudi_domain"], sec["saudi_nizam"])
+            # الربط النظامي السعودي على مستوى الكتاب (يرثه الباب والمسألة)
+            b_nizam, b_chapter, b_art, b_url = nizam_mapping(
+                bk["title"], sec["saudi_nizam"])
             book_node = OrderedDict([
                 ("node_title", bk["title"]), ("level", 2),
-                ("node_type", "fiqh_book"), ("children", [])
+                ("node_type", "fiqh_book"),
+                ("suggested_saudi_nizam", b_nizam),
+                ("suggested_saudi_nizam_chapter", b_chapter),
+                ("children", [])
             ])
             records.append(build_record(
                 title=bk["title"], level=2, parent_title=sec["title"],
                 node_type="fiqh_book", section=sec["title"], book=bk["title"],
                 saudi_domain=b_domain, saudi_nizam=b_nizam,
+                nizam_chapter=b_chapter, article_ref=b_art, nizam_url=b_url,
                 hakeem_path=f"{sec['title']} > {bk['title']}",
                 confidence=0.80, selector="fiqh_index", source_url=src,
             ))
@@ -382,6 +489,7 @@ def generate() -> Tuple[List["OrderedDict[str, Any]"], "OrderedDict[str, Any]"]:
                     title=chapter, level=3, parent_title=bk["title"],
                     node_type="fiqh_chapter", section=sec["title"], book=bk["title"],
                     saudi_domain=b_domain, saudi_nizam=b_nizam,
+                    nizam_chapter=b_chapter, article_ref=b_art, nizam_url=b_url,
                     hakeem_path=f"{sec['title']} > {bk['title']} > {chapter}",
                     confidence=0.75, selector="fiqh_index", source_url=src,
                 ))
@@ -397,6 +505,7 @@ def generate() -> Tuple[List["OrderedDict[str, Any]"], "OrderedDict[str, Any]"]:
                         title=issue_title, level=4, parent_title=chapter,
                         node_type=ntype, section=sec["title"], book=bk["title"],
                         saudi_domain=b_domain, saudi_nizam=b_nizam,
+                        nizam_chapter=b_chapter, article_ref=b_art, nizam_url=b_url,
                         hakeem_path=path, confidence=issue_confidence(dim_key),
                         selector="generated", source_url=src,
                     )
@@ -405,6 +514,7 @@ def generate() -> Tuple[List["OrderedDict[str, Any]"], "OrderedDict[str, Any]"]:
                         ("node_title", issue_title), ("level", 4),
                         ("node_type", ntype),
                         ("suggested_saudi_nizam", b_nizam),
+                        ("suggested_saudi_nizam_chapter", b_chapter),
                         ("confidence", rec["confidence"]),
                     ]))
                 book_node["children"].append(chap_node)
@@ -435,7 +545,9 @@ def write_csv(path: Path, records: List[Dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     cols = ["source", "jurisdiction", "level", "section", "book", "parent_title",
             "node_title", "normalized_title", "node_type", "suggested_saudi_domain",
-            "suggested_saudi_nizam", "suggested_hakeem_issue_path", "mapping_type",
+            "suggested_saudi_nizam", "suggested_saudi_nizam_chapter",
+            "suggested_saudi_article_ref", "saudi_nizam_url",
+            "suggested_hakeem_issue_path", "mapping_type",
             "confidence", "needs_human_review"]
     with path.open("w", encoding="utf-8", newline="") as fh:
         w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
@@ -480,6 +592,16 @@ def write_report(path: Path, records: List[Dict[str, Any]]) -> None:
     for nz, c in by_nizam.most_common():
         lines.append(f"- {nz}: {c}")
     lines.append("")
+    by_chapter = Counter(
+        (r["book"], r["suggested_saudi_nizam"], r["suggested_saudi_nizam_chapter"])
+        for r in records if r["level"] == 2)
+    lines.append("## الربط النظامي على مستوى الكتاب (الكتاب → النظام → الباب/العقد)")
+    for (bk, nz, ch), _c in by_chapter.most_common():
+        lines.append(f"- **{bk}** → {nz} — {ch}")
+    lines.append("")
+    lines.append("> مرجع المادة الدقيق (رقم المادة) موسوم بـ «يُحدَّد بالمراجعة» حيثما "
+                 "لم يُتحقَّق منه نصًّا، تفاديًا للتخمين؛ يُكمله المختص من النص الرسمي.")
+    lines.append("")
     lines.append("## العقد حسب node_type")
     for t, c in by_type.most_common():
         lines.append(f"- `{t}`: {c}")
@@ -494,8 +616,10 @@ def write_report(path: Path, records: List[Dict[str, Any]]) -> None:
 
 def validate(records: List[Dict[str, Any]]) -> int:
     required = ["source", "jurisdiction", "level", "node_title", "normalized_title",
-                "node_type", "suggested_saudi_nizam", "suggested_hakeem_issue_path",
-                "mapping_type", "confidence", "needs_human_review", "evidence"]
+                "node_type", "suggested_saudi_nizam", "suggested_saudi_nizam_chapter",
+                "suggested_saudi_article_ref", "saudi_nizam_url",
+                "suggested_hakeem_issue_path", "mapping_type", "confidence",
+                "needs_human_review", "evidence"]
     errors = 0
     for r in records:
         for k in required:
