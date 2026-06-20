@@ -1,0 +1,700 @@
+{
+  "node_title": "الموسوعة القانونية المصرية",
+  "normalized_title": "الموسوعه القانونيه المصريه",
+  "level": 0,
+  "node_type": "encyclopedia_root",
+  "branch": "",
+  "suggested_saudi_domain": "الأنظمة واللوائح",
+  "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > الموسوعة القانونية المصرية",
+  "confidence": 0.9,
+  "needs_human_review": true,
+  "children": [
+    {
+      "node_title": "موسوعة التشريعات",
+      "normalized_title": "موسوعه التشريعات",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "موسوعة التشريعات",
+      "suggested_saudi_domain": "الأنظمة واللوائح",
+      "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > موسوعة التشريعات",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "القانون المدني",
+          "normalized_title": "القانون المدني",
+          "level": 2,
+          "node_type": "legislation_category",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > القانون المدني",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "قانون العقوبات",
+          "normalized_title": "قانون العقوبات",
+          "level": 2,
+          "node_type": "legislation_category",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > قانون العقوبات",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "قانون المرافعات المدنية والتجارية",
+          "normalized_title": "قانون المرافعات المدنيه والتجاريه",
+          "level": 2,
+          "node_type": "legislation_category",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > قانون المرافعات المدنية والتجارية",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "قانون الإجراءات الجنائية",
+          "normalized_title": "قانون الاجراءات الجناييه",
+          "level": 2,
+          "node_type": "procedural_issue",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > قانون الإجراءات الجنائية",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "قانون الأحوال الشخصية",
+          "normalized_title": "قانون الاحوال الشخصيه",
+          "level": 2,
+          "node_type": "legislation_category",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > قانون الأحوال الشخصية",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "قانون العمل",
+          "normalized_title": "قانون العمل",
+          "level": 2,
+          "node_type": "labor_issue",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "نظام العمل",
+          "suggested_hakeem_issue_path": "نظام العمل > المنازعات العمالية > قانون العمل",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "اللوائح والقرارات الجمهورية",
+          "normalized_title": "اللوايح والقرارات الجمهوريه",
+          "level": 2,
+          "node_type": "legislation_category",
+          "branch": "موسوعة التشريعات",
+          "suggested_saudi_domain": "الأنظمة واللوائح",
+          "suggested_hakeem_issue_path": "الأنظمة واللوائح > التشريعات > اللوائح والقرارات الجمهورية",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "node_title": "موسوعة الأحكام",
+      "normalized_title": "موسوعه الاحكام",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "موسوعة الأحكام",
+      "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+      "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > موسوعة الأحكام",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "أحكام النقض المدني",
+          "normalized_title": "احكام النقض المدني",
+          "level": 2,
+          "node_type": "judgment_category",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+          "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > أحكام النقض المدني",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "مبادئ النقض المدني",
+              "normalized_title": "مبادي النقض المدني",
+              "level": 3,
+              "node_type": "judgment_category",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > مبادئ النقض المدني",
+              "confidence": 0.6,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "نماذج أحكام مدنية",
+              "normalized_title": "نماذج احكام مدنيه",
+              "level": 3,
+              "node_type": "judgment_category",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "المعاملات المدنية > التسبيب والحيثيات > نماذج أحكام مدنية",
+              "confidence": 0.6,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "أحكام النقض الجنائي",
+          "normalized_title": "احكام النقض الجنايي",
+          "level": 2,
+          "node_type": "judgment_category",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+          "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > أحكام النقض الجنائي",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "مبادئ النقض الجنائي",
+              "normalized_title": "مبادي النقض الجنايي",
+              "level": 3,
+              "node_type": "judgment_category",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > مبادئ النقض الجنائي",
+              "confidence": 0.6,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "نماذج أحكام جنائية",
+              "normalized_title": "نماذج احكام جناييه",
+              "level": 3,
+              "node_type": "judgment_category",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "الجزائي > التسبيب والحيثيات > نماذج أحكام جنائية",
+              "confidence": 0.6,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "أحكام الدستورية العليا",
+          "normalized_title": "احكام الدستوريه العليا",
+          "level": 2,
+          "node_type": "judgment_category",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+          "suggested_hakeem_issue_path": "السوابق والمبادئ القضائية > الأحكام > أحكام الدستورية العليا",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "المحكمة الإدارية العليا",
+          "normalized_title": "المحكمه الاداريه العليا",
+          "level": 2,
+          "node_type": "administrative_issue",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "الإداري",
+          "suggested_hakeem_issue_path": "الإداري > القضاء الإداري > المحكمة الإدارية العليا",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "القضاء الإداري",
+          "normalized_title": "القضاء الاداري",
+          "level": 2,
+          "node_type": "administrative_issue",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "الإداري",
+          "suggested_hakeem_issue_path": "الإداري > القضاء الإداري > القضاء الإداري",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "فتاوى مجلس الدولة",
+          "normalized_title": "فتاوي مجلس الدوله",
+          "level": 2,
+          "node_type": "administrative_issue",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "الإداري / المنازعات الحكومية",
+          "suggested_hakeem_issue_path": "الإداري > الفتاوى > فتاوى مجلس الدولة",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "الحيثيات",
+          "normalized_title": "الحيثيات",
+          "level": 2,
+          "node_type": "reasoning_template",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "المعاملات المدنية / المرافعات",
+          "suggested_hakeem_issue_path": "المعاملات المدنية > التسبيب والحيثيات > الحيثيات",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "حيثيات مدنية",
+              "normalized_title": "حيثيات مدنيه",
+              "level": 3,
+              "node_type": "reasoning_template",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "المعاملات المدنية / المرافعات",
+              "suggested_hakeem_issue_path": "المعاملات المدنية > التسبيب والحيثيات > حيثيات مدنية",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "حيثيات جنائية",
+              "normalized_title": "حيثيات جناييه",
+              "level": 3,
+              "node_type": "reasoning_template",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "الجزائي / الإجراءات الجزائية",
+              "suggested_hakeem_issue_path": "الجزائي > التسبيب والحيثيات > حيثيات جنائية",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "حيثيات الأسرة",
+              "normalized_title": "حيثيات الاسره",
+              "level": 3,
+              "node_type": "family_issue",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "الأحوال الشخصية",
+              "suggested_hakeem_issue_path": "الأحوال الشخصية > التسبيب والحيثيات > حيثيات الأسرة",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "حيثيات العمل",
+              "normalized_title": "حيثيات العمل",
+              "level": 3,
+              "node_type": "labor_issue",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "نظام العمل",
+              "suggested_hakeem_issue_path": "نظام العمل > التسبيب والحيثيات > حيثيات العمل",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "نماذج الأحكام",
+          "normalized_title": "نماذج الاحكام",
+          "level": 2,
+          "node_type": "reasoning_template",
+          "branch": "موسوعة الأحكام",
+          "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+          "suggested_hakeem_issue_path": "المعاملات المدنية > التسبيب والحيثيات > نماذج الأحكام",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "صيغ ونماذج الأحكام المدنية",
+              "normalized_title": "صيغ ونماذج الاحكام المدنيه",
+              "level": 3,
+              "node_type": "reasoning_template",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "المعاملات المدنية > التسبيب والحيثيات > صيغ ونماذج الأحكام المدنية",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "صيغ ونماذج الأحكام الجنائية",
+              "normalized_title": "صيغ ونماذج الاحكام الجناييه",
+              "level": 3,
+              "node_type": "reasoning_template",
+              "branch": "موسوعة الأحكام",
+              "suggested_saudi_domain": "السوابق والمبادئ القضائية",
+              "suggested_hakeem_issue_path": "الجزائي > التسبيب والحيثيات > صيغ ونماذج الأحكام الجنائية",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "node_title": "موسوعة النيابة",
+      "normalized_title": "موسوعه النيابه",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "موسوعة النيابة",
+      "suggested_saudi_domain": "الجزائي",
+      "suggested_hakeem_issue_path": "الجزائي > مسائل عامة > موسوعة النيابة",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "القيود والأوصاف",
+          "normalized_title": "القيود والاوصاف",
+          "level": 2,
+          "node_type": "criminal_classification",
+          "branch": "موسوعة النيابة",
+          "suggested_saudi_domain": "الجزائي",
+          "suggested_hakeem_issue_path": "الجزائي > التكييف الجنائي > القيود والأوصاف",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "قيود وأوصاف الجنايات",
+              "normalized_title": "قيود واوصاف الجنايات",
+              "level": 3,
+              "node_type": "criminal_classification",
+              "branch": "موسوعة النيابة",
+              "suggested_saudi_domain": "الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > التكييف الجنائي > قيود وأوصاف الجنايات",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "قيود وأوصاف الجنح",
+              "normalized_title": "قيود واوصاف الجنح",
+              "level": 3,
+              "node_type": "criminal_classification",
+              "branch": "موسوعة النيابة",
+              "suggested_saudi_domain": "الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > التكييف الجنائي > قيود وأوصاف الجنح",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "قيود وأوصاف المخالفات",
+              "normalized_title": "قيود واوصاف المخالفات",
+              "level": 3,
+              "node_type": "criminal_classification",
+              "branch": "موسوعة النيابة",
+              "suggested_saudi_domain": "الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > التكييف الجنائي > قيود وأوصاف المخالفات",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "التصرف في التحقيق",
+          "normalized_title": "التصرف في التحقيق",
+          "level": 2,
+          "node_type": "prosecution_category",
+          "branch": "موسوعة النيابة",
+          "suggested_saudi_domain": "الجزائي",
+          "suggested_hakeem_issue_path": "الجزائي > مسائل عامة > التصرف في التحقيق",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "أوامر النيابة",
+          "normalized_title": "اوامر النيابه",
+          "level": 2,
+          "node_type": "prosecution_category",
+          "branch": "موسوعة النيابة",
+          "suggested_saudi_domain": "الجزائي",
+          "suggested_hakeem_issue_path": "الجزائي > مسائل عامة > أوامر النيابة",
+          "confidence": 0.6,
+          "needs_human_review": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "node_title": "الموسوعة الجنائية",
+      "normalized_title": "الموسوعه الجناييه",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "الموسوعة الجنائية",
+      "suggested_saudi_domain": "الجزائي",
+      "suggested_hakeem_issue_path": "الجزائي > مسائل عامة > الموسوعة الجنائية",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "الدفوع الجنائية",
+          "normalized_title": "الدفوع الجناييه",
+          "level": 2,
+          "node_type": "defense_issue",
+          "branch": "الموسوعة الجنائية",
+          "suggested_saudi_domain": "الإجراءات الجزائية / الجزائي",
+          "suggested_hakeem_issue_path": "الجزائي > الدفوع > الدفوع الجنائية",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "الدفع بالبطلان",
+              "normalized_title": "الدفع بالبطلان",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة الجنائية",
+              "suggested_saudi_domain": "الإجراءات الجزائية / الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > الدفوع > الدفع بالبطلان",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "الدفع بانتفاء الركن المادي",
+              "normalized_title": "الدفع بانتفاء الركن المادي",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة الجنائية",
+              "suggested_saudi_domain": "الإجراءات الجزائية / الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > الدفوع > الدفع بانتفاء الركن المادي",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "الدفع بانتفاء القصد الجنائي",
+              "normalized_title": "الدفع بانتفاء القصد الجنايي",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة الجنائية",
+              "suggested_saudi_domain": "الإجراءات الجزائية / الجزائي",
+              "suggested_hakeem_issue_path": "الجزائي > الدفوع > الدفع بانتفاء القصد الجنائي",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "البطلان والمواعيد",
+          "normalized_title": "البطلان والمواعيد",
+          "level": 2,
+          "node_type": "legal_deadline",
+          "branch": "الموسوعة الجنائية",
+          "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+          "suggested_hakeem_issue_path": "الجزائي > البطلان والمواعيد > البطلان والمواعيد",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "بطلان إجراءات الاستدلال",
+              "normalized_title": "بطلان اجراءات الاستدلال",
+              "level": 3,
+              "node_type": "procedural_issue",
+              "branch": "الموسوعة الجنائية",
+              "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+              "suggested_hakeem_issue_path": "الجزائي > البطلان والمواعيد > بطلان إجراءات الاستدلال",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "المواعيد القانونية للطعن",
+              "normalized_title": "المواعيد القانونيه للطعن",
+              "level": 3,
+              "node_type": "legal_deadline",
+              "branch": "الموسوعة الجنائية",
+              "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+              "suggested_hakeem_issue_path": "الجزائي > البطلان والمواعيد > المواعيد القانونية للطعن",
+              "confidence": 0.9,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "التكييف الجنائي وقيود الاتهام",
+          "normalized_title": "التكييف الجنايي وقيود الاتهام",
+          "level": 2,
+          "node_type": "criminal_classification",
+          "branch": "الموسوعة الجنائية",
+          "suggested_saudi_domain": "الجزائي",
+          "suggested_hakeem_issue_path": "الجزائي > التكييف الجنائي > التكييف الجنائي وقيود الاتهام",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "node_title": "الموسوعة المدنية",
+      "normalized_title": "الموسوعه المدنيه",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "الموسوعة المدنية",
+      "suggested_saudi_domain": "المعاملات المدنية / المرافعات",
+      "suggested_hakeem_issue_path": "المعاملات المدنية > مسائل عامة > الموسوعة المدنية",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "الدفوع المدنية",
+          "normalized_title": "الدفوع المدنيه",
+          "level": 2,
+          "node_type": "defense_issue",
+          "branch": "الموسوعة المدنية",
+          "suggested_saudi_domain": "المرافعات الشرعية / المعاملات المدنية",
+          "suggested_hakeem_issue_path": "المرافعات والإجراءات > الدفوع > الدفوع المدنية",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "الدفع بعدم القبول",
+              "normalized_title": "الدفع بعدم القبول",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة المدنية",
+              "suggested_saudi_domain": "المرافعات الشرعية / المعاملات المدنية",
+              "suggested_hakeem_issue_path": "المرافعات والإجراءات > الدفوع > الدفع بعدم القبول",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "الدفع بعدم الاختصاص",
+              "normalized_title": "الدفع بعدم الاختصاص",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة المدنية",
+              "suggested_saudi_domain": "المرافعات الشرعية / المعاملات المدنية",
+              "suggested_hakeem_issue_path": "المرافعات والإجراءات > الدفوع > الدفع بعدم الاختصاص",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "الدفع بالتقادم",
+              "normalized_title": "الدفع بالتقادم",
+              "level": 3,
+              "node_type": "defense_issue",
+              "branch": "الموسوعة المدنية",
+              "suggested_saudi_domain": "المرافعات الشرعية / المعاملات المدنية",
+              "suggested_hakeem_issue_path": "المرافعات والإجراءات > الدفوع > الدفع بالتقادم",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "البطلان والمواعيد المدنية",
+          "normalized_title": "البطلان والمواعيد المدنيه",
+          "level": 2,
+          "node_type": "legal_deadline",
+          "branch": "الموسوعة المدنية",
+          "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+          "suggested_hakeem_issue_path": "المرافعات والإجراءات > البطلان والمواعيد > البطلان والمواعيد المدنية",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": [
+            {
+              "node_title": "بطلان صحيفة الدعوى",
+              "normalized_title": "بطلان صحيفه الدعوي",
+              "level": 3,
+              "node_type": "procedural_issue",
+              "branch": "الموسوعة المدنية",
+              "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+              "suggested_hakeem_issue_path": "المرافعات والإجراءات > البطلان والمواعيد > بطلان صحيفة الدعوى",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            },
+            {
+              "node_title": "مواعيد الطعن المدني",
+              "normalized_title": "مواعيد الطعن المدني",
+              "level": 3,
+              "node_type": "legal_deadline",
+              "branch": "الموسوعة المدنية",
+              "suggested_saudi_domain": "المرافعات / الإجراءات الجزائية / المحاكم التجارية",
+              "suggested_hakeem_issue_path": "المرافعات والإجراءات > البطلان والمواعيد > مواعيد الطعن المدني",
+              "confidence": 0.75,
+              "needs_human_review": true,
+              "children": []
+            }
+          ]
+        },
+        {
+          "node_title": "قواعد المواريث",
+          "normalized_title": "قواعد المواريث",
+          "level": 2,
+          "node_type": "inheritance_issue",
+          "branch": "الموسوعة المدنية",
+          "suggested_saudi_domain": "الأحوال الشخصية / التركات",
+          "suggested_hakeem_issue_path": "الأحوال الشخصية > التركات والمواريث > قواعد المواريث",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "منشورات الشهر العقاري",
+          "normalized_title": "منشورات الشهر العقاري",
+          "level": 2,
+          "node_type": "real_estate_documentation",
+          "branch": "الموسوعة المدنية",
+          "suggested_saudi_domain": "التوثيق / العقار",
+          "suggested_hakeem_issue_path": "التوثيق والعقار > الشهر العقاري > منشورات الشهر العقاري",
+          "confidence": 0.9,
+          "needs_human_review": true,
+          "children": []
+        }
+      ]
+    },
+    {
+      "node_title": "القاموس القانوني",
+      "normalized_title": "القاموس القانوني",
+      "level": 1,
+      "node_type": "encyclopedia_branch",
+      "branch": "القاموس القانوني",
+      "suggested_saudi_domain": "مفاهيم قانونية / مكنز",
+      "suggested_hakeem_issue_path": "المفاهيم القانونية > المكنز القانوني > القاموس القانوني",
+      "confidence": 0.9,
+      "needs_human_review": true,
+      "children": [
+        {
+          "node_title": "المصطلحات القانونية",
+          "normalized_title": "المصطلحات القانونيه",
+          "level": 2,
+          "node_type": "legal_dictionary",
+          "branch": "القاموس القانوني",
+          "suggested_saudi_domain": "مفاهيم قانونية / مكنز",
+          "suggested_hakeem_issue_path": "المفاهيم القانونية > المكنز القانوني > المصطلحات القانونية",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        },
+        {
+          "node_title": "المكنز القانوني",
+          "normalized_title": "المكنز القانوني",
+          "level": 2,
+          "node_type": "legal_dictionary",
+          "branch": "القاموس القانوني",
+          "suggested_saudi_domain": "مفاهيم قانونية / مكنز",
+          "suggested_hakeem_issue_path": "المفاهيم القانونية > المكنز القانوني > المكنز القانوني",
+          "confidence": 0.75,
+          "needs_human_review": true,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

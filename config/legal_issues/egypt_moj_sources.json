@@ -1,0 +1,20 @@
+{
+  "start_urls": [
+    "https://w.emj-eg.com/",
+    "https://serviceapi.egyptianlaws.com/"
+  ],
+  "blocked_patterns": [
+    "login",
+    "account",
+    "subscription",
+    "payment",
+    "signin",
+    "register",
+    "auth",
+    "profile"
+  ],
+  "allowed_domains": [
+    "w.emj-eg.com",
+    "serviceapi.egyptianlaws.com"
+  ]
+}

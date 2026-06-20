@@ -1,0 +1,47 @@
+{
+  "started_at": "2026-06-20T01:56:26",
+  "elapsed_seconds": 1.06,
+  "user_agent": "HakeemLegalIssuesResearchBot/0.1",
+  "start_urls": [
+    "https://w.emj-eg.com/",
+    "https://serviceapi.egyptianlaws.com/"
+  ],
+  "max_pages": 5,
+  "delay": 2.0,
+  "timeout": 20.0,
+  "network_attempted": true,
+  "pages_visited": [],
+  "links_skipped": [
+    {
+      "url": "https://w.emj-eg.com/",
+      "reason": "robots_disallow"
+    },
+    {
+      "url": "https://serviceapi.egyptianlaws.com/",
+      "reason": "robots_disallow"
+    }
+  ],
+  "errors": [],
+  "seed_nodes": 57,
+  "crawl_nodes": 0,
+  "total_nodes": 57,
+  "nodes_by_type": {
+    "encyclopedia_root": 1,
+    "encyclopedia_branch": 6,
+    "legislation_category": 5,
+    "procedural_issue": 3,
+    "labor_issue": 2,
+    "judgment_category": 7,
+    "administrative_issue": 3,
+    "reasoning_template": 6,
+    "family_issue": 1,
+    "criminal_classification": 5,
+    "prosecution_category": 2,
+    "defense_issue": 8,
+    "legal_deadline": 4,
+    "inheritance_issue": 1,
+    "real_estate_documentation": 1,
+    "legal_dictionary": 2
+  },
+  "schema_validation_errors": 0
+}
