@@ -1,13 +1,29 @@
 # Muqtafi Legal Issue Tree Extractor
 
-A small, **safe-by-design** crawler that samples **public** pages of the
-[Muqtafi legal database](https://muqtafi.birzeit.edu/) (Birzeit University) and
-extracts *legal issue-tree candidates* — domains, law names, chapters, article
-numbers, and legal concepts/issues/procedures — as clean JSONL.
+This directory holds two independent, **safe-by-design** tools for building a
+legal issue tree from the [Muqtafi legal database](https://muqtafi.birzeit.edu/)
+(Birzeit University):
 
-The output is meant to feed a **human-reviewed** mapping step into the
-**Hakeem Legal Issues Core**. The extractor is deliberately kept independent and
-is **not** wired to any production database.
+1. **`muqtafi_issue_tree_extractor.py`** — samples **public legislation** pages
+   and derives issue-tree *candidates* from legal text (domains, law names,
+   chapters, articles, and procedural/substantive issues).
+2. **`muqtafi_thesaurus_extractor.py`** — extracts the **conceptual layer**
+   (thesaurus / conceptual-linking / lexicon): terms, definitions, and relations
+   (broader / narrower / related / synonym / used-for), and assembles a nested
+   **issue tree** from those relations.
+
+Both feed a **human-reviewed** mapping step into the **Hakeem Legal Issues
+Core**, and neither is wired to any production database.
+
+> ### Authorized, public access only — robust, not evasive
+> These tools handle the real site mechanics (ASP.NET postbacks, pagination,
+> sessions, Arabic encoding) for **authorized** access to **public** content.
+> They respect `robots.txt`, rate-limit, and skip login/subscription/account
+> URLs. They must **not** be modified to bypass authentication or paywalls,
+> solve CAPTCHAs, rotate IPs/proxies, spoof a browser to defeat bot-blocking, or
+> ignore `robots.txt`. Muqtafi may return HTTP **403** to automated clients —
+> that is the operator's access decision; expanded access needs **written
+> permission from Birzeit or an official API**.
 
 ---
 
@@ -164,3 +180,70 @@ for real generated examples.
   and is **not** a substitute for authoritative legal texts.
 - **Not connected to production.** This extractor stands alone and is not wired
   into the Hakeem production database; integration is a separate, reviewed step.
+
+---
+
+## Thesaurus / concept / lexicon extractor
+
+`muqtafi_thesaurus_extractor.py` targets the **conceptual layer** and turns it
+into a structured graph plus a nested issue tree.
+
+### What it parses
+
+For each term/concept it captures: `term`, `entry_type`
+(`thesaurus_descriptor` / `concept` / `lexicon_entry`), `domain`, `definition`,
+`scope_note`, and the thesaurus relations `broader`, `narrower`, `related`,
+`synonyms`, `use_for`. It recognizes both Arabic labels (المصطلح الأعم/الأخص،
+مصطلح ذو صلة، مرادف، استخدم، التعريف، المجال) and ISO-2788 abbreviations
+(BT/NT/RT/UF/USE/SN), across definition lists, two-column tables, and labeled
+inline text.
+
+### Robust site handling
+
+- Polite session with honest UA and correct `Accept-Language: ar`.
+- `robots.txt` respected; retries with exponential backoff.
+- Optional `--follow-pagination` replays ASP.NET `__doPostBack` "next page"
+  navigations (reading `__VIEWSTATE` / `__EVENTVALIDATION`) **within**
+  `--max-pages` — robustness, not evasion.
+
+### CLI
+
+```bash
+python scripts/legal_issues/muqtafi_thesaurus_extractor.py \
+    --seed "https://muqtafi.birzeit.edu/<public-thesaurus-page>" \
+    --max-pages 5 --delay 3 --follow-pagination \
+    --out muqtafi_thesaurus.jsonl \
+    --tree muqtafi_issue_tree.json
+```
+
+A `--seed` is required (give the public thesaurus/concept URL). `--user-agent`
+lets an authorized user identify themselves.
+
+### Output
+
+- **`--out`** JSONL — one `ThesaurusEntry` per line. See
+  [`data/samples/muqtafi_thesaurus_sample.jsonl`](../../data/samples/muqtafi_thesaurus_sample.jsonl).
+- **`--tree`** JSON — nested issue tree built from broader↔narrower relations
+  (roots are terms with no broader parent; cycles are broken defensively). See
+  [`data/samples/muqtafi_issue_tree_sample.json`](../../data/samples/muqtafi_issue_tree_sample.json).
+
+```json
+{
+  "term": "الحجز",
+  "entry_type": "thesaurus_descriptor",
+  "domain": "التنفيذ",
+  "definition": "وضع المال تحت يد القضاء منعا من التصرف فيه ضمانا لحق الدائن.",
+  "broader": ["إجراءات التنفيذ"],
+  "narrower": ["الحجز التحفظي", "الحجز التنفيذي", "حجز ما للمدين لدى الغير"],
+  "related": ["بيع الأموال المحجوزة"],
+  "synonyms": ["التوقيع على المال"],
+  "use_for": [],
+  "source_url": "https://muqtafi.birzeit.edu/thes.aspx?id=1",
+  "confidence": 0.95,
+  "needs_human_review": false
+}
+```
+
+> The parser is selector-tolerant by design because the live HTML is not visible
+> from a blocked network. On first authorized run, confirm the relation labels
+> match the real page and adjust `RELATION_LABELS` if needed.
