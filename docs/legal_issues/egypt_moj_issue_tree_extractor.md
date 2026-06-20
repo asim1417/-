@@ -41,8 +41,13 @@ python scripts/legal_issues/egypt_moj_issue_tree_extractor.py \
 | الخيار | الوصف | الافتراضي |
 | --- | --- | --- |
 | `--max-pages` | أقصى عدد صفحات للزيارة | `5` |
+| `--max-depth` | أقصى عمق للزحف الداخلي (BFS) | `3` |
 | `--delay` | تأخير بين الطلبات (ثوانٍ) | `2.0` |
 | `--timeout` | مهلة الطلب (ثوانٍ) | `20.0` |
+| `--input-dir` | مجلد ملفات HTML/JSON محفوظة محليًا للاستخراج offline | `None` |
+| `--no-network` | تخطّي الزحف والاكتفاء بالبذرة/الملفات المحلية | `false` |
+| `--no-sitemap` | عدم اكتشاف `sitemap.xml` أثناء الزحف | `false` |
+| `--no-seed` | عدم تضمين البذرة الهيكلية | `false` |
 | `--config` | ملف مصادر JSON | `config/legal_issues/egypt_moj_sources.json` |
 | `--out-jsonl` | ملف JSONL المسطّح | `data/legal_issues/egypt_moj_issue_candidates.jsonl` |
 | `--out-tree` | ملف الشجرة الهرمية | `data/legal_issues/egypt_moj_issue_tree_seed.json` |
@@ -60,6 +65,37 @@ python scripts/legal_issues/egypt_moj_issue_tree_extractor.py \
 python tests/legal_issues/test_egypt_moj_issue_tree_extractor.py
 # أو عبر pytest
 pytest tests/legal_issues/
+```
+
+### قدرات الاستخراج (للحصول على "نتيجة قوية")
+
+للأداة ثلاثة مصادر تتكامل في مخرج واحد موحّد:
+
+1. **البذرة الهيكلية المضمونة** — بنية الموسوعة المعروفة علنًا (تعمل دائمًا، بلا شبكة).
+2. **الزحف الحيّ المُحسّن** (عند توفّر شبكة مسموح بها):
+   - اكتشاف `sitemap.xml` من توجيه `Sitemap:` في robots.txt ومن `/sitemap.xml`،
+     ثم تتبّع روابطها لرفع تغطية الصفحات العامة.
+   - **استيعاب واجهات JSON العامة** (مثل `serviceapi`): يمشي على حمولة JSON
+     تكراريًا ويستخرج التصنيفات/العناوين القانونية.
+   - زحف عرضي (BFS) بعمق قابل للضبط `--max-depth` مع تتبّع روابط الترقيم.
+3. **الاستيعاب offline** عبر `--input-dir`: تحفظ أنت صفحات الفهارس العامة
+   من متصفحك (HTML أو JSON) داخل مجلد، فيستخرج منها الأداة شجرة قوية **دون أي
+   اتصال شبكي**. إن وضعت ملفًا مرافقًا `<اسم>.url` يحوي الرابط الأصلي فسيُستخدم
+   كـ `source_url` في الأدلة.
+
+> هذا المسار (offline) هو الطريق العملي للحصول على نتيجة قوية حين تكون سياسة
+> الشبكة في البيئة مقيّدة (allowlist)، إذ تُحجب مواقع الموسوعة على مستوى الـ proxy
+> ولا يمكن لأي سكريبت تجاوز ذلك.
+
+#### مثال على الاستخراج offline
+
+```bash
+# 1) احفظ صفحات الفهارس العامة يدويًا من متصفحك داخل مجلد:
+#    data/samples/input_pages/civil_index.html  (+ civil_index.url اختياري)
+#    data/samples/input_pages/prosecution_api.json
+# 2) شغّل الاستخراج بلا شبكة:
+python scripts/legal_issues/egypt_moj_issue_tree_extractor.py \
+  --input-dir data/samples/input_pages --no-network
 ```
 
 ## 3) حدود المصدر والالتزامات الأخلاقية

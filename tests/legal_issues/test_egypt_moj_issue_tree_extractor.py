@@ -322,6 +322,83 @@ def test_blocked_links_not_enqueued_in_pipeline():
     assert not crawler.is_blocked("https://w.emj-eg.com/encyclopedia/defenses")
 
 
+# --------------------------------------------------------------------------- #
+# JSON API ingestion
+# --------------------------------------------------------------------------- #
+
+def test_json_to_records_extracts_nested_legal_nodes():
+    payload = {
+        "result": [
+            {"name": "موسوعة النيابة", "children": [
+                {"title": "قيود وأوصاف الجنح"},
+                {"title": "أوامر النيابة بالحفظ"},
+            ]},
+            {"label": "فتاوى مجلس الدولة", "items": [
+                {"label": "فتاوى العقود الإدارية"},
+            ]},
+            {"title": "اتصل بنا"},  # بلا مؤشّر قانوني — يجب استبعادها
+        ]
+    }
+    recs = ex.json_to_records(payload, "https://serviceapi.egyptianlaws.com/api/x")
+    titles = {r["node_title"] for r in recs}
+    assert "قيود وأوصاف الجنح" in titles
+    assert "فتاوى العقود الإدارية" in titles
+    assert "اتصل بنا" not in titles
+    for r in recs:
+        assert ex.validate_record(r) == []
+        assert r["evidence"]["selector"] == "json"
+    types = {r["node_title"]: r["node_type"] for r in recs}
+    assert types["قيود وأوصاف الجنح"] == "criminal_classification"
+
+
+# --------------------------------------------------------------------------- #
+# sitemap parsing
+# --------------------------------------------------------------------------- #
+
+def test_parse_sitemap_xml():
+    xml = """<?xml version="1.0"?>
+    <urlset>
+      <url><loc>https://w.emj-eg.com/civil/defenses</loc></url>
+      <url><loc>https://w.emj-eg.com/criminal/classification</loc></url>
+    </urlset>"""
+    locs = ex.SafeCrawler.parse_sitemap_xml(xml)
+    assert "https://w.emj-eg.com/civil/defenses" in locs
+    assert len(locs) == 2
+
+
+# --------------------------------------------------------------------------- #
+# offline ingestion (ingest_local)
+# --------------------------------------------------------------------------- #
+
+def test_ingest_local_html_and_json(tmp_path=None):
+    import tempfile
+    base = tempfile.mkdtemp()
+    d = Path(base)
+    (d / "page.html").write_text(
+        "<html><head><title>الموسوعة المدنية</title></head><body>"
+        "<h2>الدفوع المدنية</h2>"
+        "<ul><li><a href='/x'>الدفع بالتقادم</a></li>"
+        "<li><a href='/login'>دخول</a></li></ul></body></html>",
+        encoding="utf-8",
+    )
+    (d / "page.url").write_text("https://w.emj-eg.com/civil", encoding="utf-8")
+    (d / "api.json").write_text(
+        '{"items":[{"title":"قيود وأوصاف الجنايات"}]}', encoding="utf-8"
+    )
+    recs = ex.ingest_local(str(d))
+    titles = {r["node_title"] for r in recs}
+    assert "الدفوع المدنية" in titles
+    assert "الدفع بالتقادم" in titles
+    assert "قيود وأوصاف الجنايات" in titles
+    # رابط دخول المشتركين لا يُلتقط كعقدة قانونية
+    assert "دخول" not in titles
+    for r in recs:
+        assert ex.validate_record(r) == []
+    # الرابط المصدر يُؤخذ من ملف .url المرافق
+    html_recs = [r for r in recs if r["node_title"] == "الدفوع المدنية"]
+    assert html_recs and html_recs[0]["source_url"] == "https://w.emj-eg.com/civil"
+
+
 if __name__ == "__main__":
     import traceback
 

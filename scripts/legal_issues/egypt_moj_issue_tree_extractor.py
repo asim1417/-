@@ -854,6 +854,8 @@ class SafeCrawler:
         timeout: float,
         respect_robots: bool = True,
         max_retries: int = 3,
+        max_depth: int = 3,
+        use_sitemap: bool = True,
     ) -> None:
         self.allowed_domains = [d.lower() for d in allowed_domains]
         self.blocked_patterns = [p.lower() for p in blocked_patterns]
@@ -862,10 +864,14 @@ class SafeCrawler:
         self.timeout = timeout
         self.respect_robots = respect_robots
         self.max_retries = max_retries
+        self.max_depth = max_depth
+        self.use_sitemap = use_sitemap
 
         self.visited: List[str] = []
         self.skipped: List[Tuple[str, str]] = []  # (url, reason)
         self.errors: List[Tuple[str, str]] = []  # (url, error)
+        self.json_records: List["OrderedDict[str, Any]"] = []  # عقد من واجهات JSON
+        self.sitemaps_seen: List[str] = []
         self._robots_cache: Dict[str, Optional[robotparser.RobotFileParser]] = {}
 
     # --- فلترة الروابط ---
@@ -906,7 +912,11 @@ class SafeCrawler:
             return True
 
     # --- جلب صفحة مع retry/backoff ---
-    def fetch(self, url: str) -> Optional[str]:
+    def fetch(self, url: str) -> Tuple[Optional[str], str]:
+        """تُعيد (المحتوى، النوع) حيث النوع أحد: html / xml / json / "".
+
+        تدعم HTML (الفهارس العامة) وXML (sitemap) وJSON (واجهات serviceapi العامة).
+        """
         backoff = 2.0
         for attempt in range(1, self.max_retries + 1):
             try:
@@ -914,24 +924,31 @@ class SafeCrawler:
                     url,
                     headers={
                         "User-Agent": USER_AGENT,
-                        "Accept": "text/html,application/xhtml+xml",
+                        "Accept": "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8",
                         "Accept-Language": "ar,en;q=0.8",
                     },
                 )
                 with urlopen(req, timeout=self.timeout) as resp:
-                    ctype = resp.headers.get("Content-Type", "")
-                    if "html" not in ctype and "xml" not in ctype and ctype:
-                        logger.info("تخطّي محتوى غير HTML (%s) في %s", ctype, url)
-                        return None
+                    ctype = (resp.headers.get("Content-Type", "") or "").lower()
                     charset = resp.headers.get_content_charset() or "utf-8"
-                    raw = resp.read(2_000_000)  # حد أعلى لطيف ~2MB
-                    return raw.decode(charset, errors="replace")
+                    raw = resp.read(4_000_000)  # حد أعلى لطيف ~4MB
+                    text = raw.decode(charset, errors="replace")
+                    if "json" in ctype or (not ctype and text.lstrip()[:1] in "[{"):
+                        kind = "json"
+                    elif "xml" in ctype or url.lower().endswith(".xml"):
+                        kind = "xml"
+                    elif "html" in ctype or not ctype:
+                        kind = "html"
+                    else:
+                        logger.info("تخطّي محتوى غير مدعوم (%s) في %s", ctype, url)
+                        return None, ""
+                    return text, kind
             except HTTPError as exc:
                 # أخطاء العميل (4xx) لا تُعاد المحاولة فيها
                 if 400 <= exc.code < 500 and exc.code not in (408, 429):
                     self.errors.append((url, f"HTTP {exc.code}"))
                     logger.warning("HTTP %s في %s — لا إعادة محاولة", exc.code, url)
-                    return None
+                    return None, ""
                 logger.warning(
                     "HTTP %s في %s (محاولة %d/%d)", exc.code, url, attempt, self.max_retries
                 )
@@ -944,22 +961,58 @@ class SafeCrawler:
             except Exception as exc:  # pragma: no cover
                 self.errors.append((url, f"{type(exc).__name__}: {exc}"))
                 logger.warning("خطأ غير متوقّع في %s: %s", url, exc)
-                return None
+                return None, ""
 
             if attempt < self.max_retries:
                 time.sleep(backoff)
                 backoff *= 2
         self.errors.append((url, "exhausted retries"))
-        return None
+        return None, ""
+
+    # --- اكتشاف خرائط الموقع (sitemap) ---
+    def discover_sitemaps(self, base_url: str) -> List[str]:
+        """جمع روابط sitemap من توجيه robots.txt ومن /sitemap.xml الافتراضي."""
+        parsed = urlparse(base_url)
+        base = f"{parsed.scheme}://{parsed.netloc}"
+        candidates: List[str] = []
+        rp = self._robots(base + "/")
+        if rp is not None:
+            try:
+                sm = rp.site_maps()
+                if sm:
+                    candidates.extend(sm)
+            except Exception:
+                pass
+        candidates.append(urljoin(base, "/sitemap.xml"))
+        # إزالة التكرار مع الحفاظ على الترتيب
+        return list(dict.fromkeys(candidates))
+
+    @staticmethod
+    def parse_sitemap_xml(text: str) -> List[str]:
+        """استخراج كل <loc>...</loc> من ملف sitemap أو فهرس sitemaps."""
+        return [m.strip() for m in re.findall(r"<loc>\s*(.*?)\s*</loc>", text, re.I | re.S)]
 
     def crawl(self, start_urls: List[str]) -> List[Dict[str, Any]]:
-        """زحف عرضي محدود يُعيد قائمة بنتائج التحليل لكل صفحة تمت زيارتها."""
+        """زحف عرضي محدود (BFS) مع عمق ودعم sitemap وJSON.
+
+        يُعيد قائمة بنتائج تحليل صفحات HTML؛ وتُجمع عقد JSON في self.json_records.
+        """
         results: List[Dict[str, Any]] = []
-        queue: List[str] = list(dict.fromkeys(start_urls))
-        seen = set(queue)
+        # عناصر الطابور: (url, depth)
+        queue: List[Tuple[str, int]] = [(u, 0) for u in dict.fromkeys(start_urls)]
+        seen = {u for u, _ in queue}
+
+        # بذر خرائط الموقع (sitemap) لرفع التغطية للصفحات العامة
+        if self.use_sitemap:
+            for u in list(dict.fromkeys(start_urls)):
+                for sm in self.discover_sitemaps(u):
+                    if sm not in seen and self.is_allowed_domain(sm) and not self.is_blocked(sm):
+                        seen.add(sm)
+                        self.sitemaps_seen.append(sm)
+                        queue.append((sm, 0))
 
         while queue and len(self.visited) < self.max_pages:
-            url = queue.pop(0)
+            url, depth = queue.pop(0)
 
             if self.is_blocked(url):
                 self.skipped.append((url, "blocked_pattern"))
@@ -971,46 +1024,72 @@ class SafeCrawler:
                 self.skipped.append((url, "robots_disallow"))
                 continue
 
-            logger.info("زيارة (%d/%d): %s", len(self.visited) + 1, self.max_pages, url)
-            html = self.fetch(url)
+            logger.info(
+                "زيارة (%d/%d) [عمق %d]: %s",
+                len(self.visited) + 1, self.max_pages, depth, url,
+            )
+            text, kind = self.fetch(url)
             self.visited.append(url)
 
-            if not html:
+            if not text:
                 if self.delay:
                     time.sleep(self.delay)
                 continue
 
-            parser = StructureParser()
-            try:
-                parser.feed(html)
-            except Exception as exc:  # pragma: no cover
-                self.errors.append((url, f"parse error: {exc}"))
-                continue
+            if kind == "json":
+                # واجهة JSON عامة (مثل serviceapi) — استخراج العقد منها مباشرة
+                try:
+                    payload = json.loads(text)
+                    recs = json_to_records(payload, url)
+                    self.json_records.extend(recs)
+                    logger.info("استخرجت %d عقدة من JSON: %s", len(recs), url)
+                except Exception as exc:
+                    self.errors.append((url, f"json parse error: {exc}"))
 
-            results.append(
-                {
-                    "url": url,
-                    "title": parser.title,
-                    "headings": parser.headings,
-                    "list_items": parser.list_items,
-                    "links": parser.links,
-                    "breadcrumbs": parser.breadcrumbs,
-                }
-            )
+            elif kind == "xml":
+                # sitemap أو فهرس sitemaps — تتبّع روابطه
+                for loc in self.parse_sitemap_xml(text):
+                    nxt = loc.split("#")[0]
+                    if not nxt.startswith("http") or nxt in seen:
+                        continue
+                    if self.is_blocked(nxt) or not self.is_allowed_domain(nxt):
+                        continue
+                    seen.add(nxt)
+                    queue.append((nxt, depth))  # روابط sitemap بنفس العمق
 
-            # إضافة روابط جديدة ضمن النطاق وغير المحظورة
-            for href, _txt in parser.links:
-                if not href:
+            else:  # html
+                parser = StructureParser()
+                try:
+                    parser.feed(text)
+                except Exception as exc:  # pragma: no cover
+                    self.errors.append((url, f"parse error: {exc}"))
+                    if self.delay:
+                        time.sleep(self.delay)
                     continue
-                nxt = urljoin(url, href.split("#")[0])
-                if not nxt.startswith("http"):
-                    continue
-                if nxt in seen:
-                    continue
-                if self.is_blocked(nxt) or not self.is_allowed_domain(nxt):
-                    continue
-                seen.add(nxt)
-                queue.append(nxt)
+
+                results.append(
+                    {
+                        "url": url,
+                        "title": parser.title,
+                        "headings": parser.headings,
+                        "list_items": parser.list_items,
+                        "links": parser.links,
+                        "breadcrumbs": parser.breadcrumbs,
+                    }
+                )
+
+                # تتبّع الروابط الداخلية حتى max_depth (مع pagination عبر روابط <a>)
+                if depth < self.max_depth:
+                    for href, _txt in parser.links:
+                        if not href:
+                            continue
+                        nxt = urljoin(url, href.split("#")[0])
+                        if not nxt.startswith("http") or nxt in seen:
+                            continue
+                        if self.is_blocked(nxt) or not self.is_allowed_domain(nxt):
+                            continue
+                        seen.add(nxt)
+                        queue.append((nxt, depth + 1))
 
             if self.delay:
                 time.sleep(self.delay)
@@ -1078,6 +1157,147 @@ def crawl_results_to_records(
                     text_snippet=snippet,
                 )
             )
+    return records
+
+
+# مفاتيح JSON الشائعة التي تحمل عناوين/تصنيفات قابلة للاستخراج
+_JSON_TITLE_KEYS = {
+    "title", "name", "label", "text", "caption", "heading", "category",
+    "section", "subject", "node", "term", "arabic", "ar", "name_ar",
+    "title_ar", "value", "displayname", "display_name",
+}
+_JSON_CHILD_KEYS = {
+    "children", "items", "nodes", "subcategories", "sub", "data", "result",
+    "results", "list", "categories", "sections", "branches", "content",
+}
+
+
+def json_to_records(
+    payload: Any,
+    url: str,
+    *,
+    parent_title: str = "",
+    branch: str = "",
+    _depth: int = 0,
+) -> List["OrderedDict[str, Any]"]:
+    """استخراج عقد قانونية مرشّحة من حمولة JSON عامة (مثل واجهات serviceapi).
+
+    يمشي على الشجرة بشكل تكراري، يلتقط القيم النصية تحت مفاتيح العناوين
+    المعروفة، ويصفّيها بمؤشّر قانوني، ثم يبني سجلات بنفس المخطط.
+    """
+    records: List["OrderedDict[str, Any]"] = []
+    if _depth > 8:
+        return records
+
+    if isinstance(payload, dict):
+        local_title = ""
+        for key in _JSON_TITLE_KEYS:
+            val = payload.get(key)
+            if isinstance(val, str) and val.strip():
+                local_title = val.strip()
+                break
+
+        if local_title:
+            norm = normalize_arabic(local_title)
+            if len(norm) >= 3 and _LEGAL_HINT.search(norm):
+                records.append(
+                    build_node_record(
+                        title=local_title,
+                        level=3,
+                        branch=branch or parent_title,
+                        parent_title=parent_title,
+                        source_url=url,
+                        selector="json",
+                        text_snippet=local_title,
+                    )
+                )
+
+        next_parent = local_title or parent_title
+        next_branch = branch or local_title
+        for _key, val in payload.items():
+            if isinstance(val, (dict, list)):
+                records.extend(
+                    json_to_records(
+                        val, url,
+                        parent_title=next_parent, branch=next_branch,
+                        _depth=_depth + 1,
+                    )
+                )
+
+    elif isinstance(payload, list):
+        for item in payload:
+            records.extend(
+                json_to_records(
+                    item, url,
+                    parent_title=parent_title, branch=branch,
+                    _depth=_depth + 1,
+                )
+            )
+
+    # إزالة التكرار حسب (normalized_title)
+    deduped: "OrderedDict[str, OrderedDict[str, Any]]" = OrderedDict()
+    for r in records:
+        deduped.setdefault(r["normalized_title"], r)
+    return list(deduped.values())
+
+
+# --------------------------------------------------------------------------- #
+# استيعاب ملفات محفوظة محليًا (offline) — مسار "النتيجة القوية" بلا شبكة
+# --------------------------------------------------------------------------- #
+
+def ingest_local(input_dir: str) -> List["OrderedDict[str, Any]"]:
+    """استخراج عقد من صفحات HTML/JSON محفوظة محليًا (وصول مشروع، بلا شبكة).
+
+    يقرأ كل ملفات *.html / *.htm / *.json داخل المجلد (تتبّعًا تكراريًا).
+    إن وُجد ملف مرافق بنفس الاسم بامتداد .url فيُستخدم محتواه كـ source_url.
+    """
+    root = Path(input_dir)
+    records: List["OrderedDict[str, Any]"] = []
+    if not root.exists():
+        logger.warning("مجلد الإدخال غير موجود: %s", input_dir)
+        return records
+
+    files = sorted(
+        list(root.rglob("*.html"))
+        + list(root.rglob("*.htm"))
+        + list(root.rglob("*.json"))
+    )
+    for fp in files:
+        url_file = fp.with_suffix(".url")
+        source_url = (
+            url_file.read_text(encoding="utf-8").strip()
+            if url_file.exists()
+            else f"file://{fp.resolve()}"
+        )
+        try:
+            text = fp.read_text(encoding="utf-8", errors="replace")
+        except Exception as exc:
+            logger.warning("تعذّر قراءة %s: %s", fp, exc)
+            continue
+
+        if fp.suffix.lower() == ".json":
+            try:
+                records.extend(json_to_records(json.loads(text), source_url))
+            except Exception as exc:
+                logger.warning("JSON غير صالح في %s: %s", fp, exc)
+        else:
+            parser = StructureParser()
+            try:
+                parser.feed(text)
+            except Exception as exc:
+                logger.warning("تعذّر تحليل %s: %s", fp, exc)
+                continue
+            page = {
+                "url": source_url,
+                "title": parser.title,
+                "headings": parser.headings,
+                "list_items": parser.list_items,
+                "links": parser.links,
+                "breadcrumbs": parser.breadcrumbs,
+            }
+            records.extend(crawl_results_to_records([page]))
+
+    logger.info("استوعبت %d عقدة من %d ملف محلي.", len(records), len(files))
     return records
 
 
@@ -1263,10 +1483,26 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p.add_argument("--out-sample", default=DEFAULT_OUT_SAMPLE, help="ملف العينة")
     p.add_argument("--out-report", default=DEFAULT_OUT_REPORT, help="تقرير التشغيل (md)")
     p.add_argument("--log", default=DEFAULT_LOG, help="ملف سجل التشغيل JSON")
+    p.add_argument("--max-depth", type=int, default=3, help="أقصى عمق للزحف الداخلي")
+    p.add_argument(
+        "--input-dir",
+        default=None,
+        help="مجلد ملفات HTML/JSON محفوظة محليًا للاستخراج offline (بلا شبكة)",
+    )
     p.add_argument(
         "--no-network",
         action="store_true",
-        help="عدم محاولة الزحف الشبكي والاكتفاء بالبذرة الهيكلية",
+        help="عدم محاولة الزحف الشبكي والاكتفاء بالبذرة الهيكلية/الملفات المحلية",
+    )
+    p.add_argument(
+        "--no-sitemap",
+        action="store_true",
+        help="عدم اكتشاف sitemap.xml أثناء الزحف",
+    )
+    p.add_argument(
+        "--no-seed",
+        action="store_true",
+        help="عدم تضمين البذرة الهيكلية (الاكتفاء بالزحف/الملفات المحلية)",
     )
     p.add_argument(
         "--no-robots",
@@ -1295,10 +1531,18 @@ def main(argv: Optional[List[str]] = None) -> int:
     started_at = time.time()
 
     # ---- (4) البذرة الهيكلية المضمونة ----
-    seed_records = [rec for rec, _node in iter_seed_records(SEED_TREE)]
-    logger.info("تم توليد %d عقدة من البذرة الهيكلية.", len(seed_records))
+    seed_records: List["OrderedDict[str, Any]"] = []
+    if not args.no_seed:
+        seed_records = [rec for rec, _node in iter_seed_records(SEED_TREE)]
+        logger.info("تم توليد %d عقدة من البذرة الهيكلية.", len(seed_records))
 
-    # ---- (1) الزحف الآمن (اختياري حسب الشبكة) ----
+    # ---- (ب) استيعاب الملفات المحلية offline (إن طُلب) ----
+    local_records: List["OrderedDict[str, Any]"] = []
+    if args.input_dir:
+        logger.info("استيعاب الملفات المحلية من: %s", args.input_dir)
+        local_records = ingest_local(args.input_dir)
+
+    # ---- (1) الزحف الآمن المُحسّن (sitemap + JSON + عمق) ----
     crawler = SafeCrawler(
         allowed_domains=allowed,
         blocked_patterns=blocked,
@@ -1306,25 +1550,34 @@ def main(argv: Optional[List[str]] = None) -> int:
         delay=args.delay,
         timeout=args.timeout,
         respect_robots=not args.no_robots,
+        max_depth=args.max_depth,
+        use_sitemap=not args.no_sitemap,
     )
     crawl_records: List["OrderedDict[str, Any]"] = []
     if not args.no_network and start_urls:
-        logger.info("بدء الزحف المهذّب (حد أقصى %d صفحات)...", args.max_pages)
+        logger.info(
+            "بدء الزحف المهذّب (حد أقصى %d صفحات، عمق %d، sitemap=%s)...",
+            args.max_pages, args.max_depth, not args.no_sitemap,
+        )
         try:
             results = crawler.crawl(start_urls)
             crawl_records = crawl_results_to_records(results)
+            # دمج عقد JSON المستخرجة من واجهات serviceapi العامة
+            crawl_records = list(crawl_records) + list(crawler.json_records)
             logger.info(
-                "انتهى الزحف: %d صفحة زيارة، %d عقدة مرشّحة من الويب.",
-                len(crawler.visited), len(crawl_records),
+                "انتهى الزحف: %d صفحة زيارة، %d عقدة HTML + %d عقدة JSON.",
+                len(crawler.visited), len(results), len(crawler.json_records),
             )
         except Exception as exc:  # pragma: no cover
-            logger.error("فشل الزحف: %s — الاكتفاء بالبذرة الهيكلية.", exc)
+            logger.error("فشل الزحف: %s — الاكتفاء بالبذرة/الملفات المحلية.", exc)
             crawler.errors.append(("<crawl>", str(exc)))
     else:
         logger.info("تم تخطّي الزحف الشبكي (--no-network أو لا توجد روابط).")
 
     # ---- دمج العقد ----
-    all_records: List[Dict[str, Any]] = list(seed_records) + list(crawl_records)
+    all_records: List[Dict[str, Any]] = (
+        list(seed_records) + list(local_records) + list(crawl_records)
+    )
 
     # إزالة التكرار حسب (normalized_title, level, branch)
     deduped: "OrderedDict[Tuple[str, int, str], Dict[str, Any]]" = OrderedDict()
@@ -1371,11 +1624,16 @@ def main(argv: Optional[List[str]] = None) -> int:
             ("delay", args.delay),
             ("timeout", args.timeout),
             ("network_attempted", (not args.no_network) and bool(start_urls)),
+            ("max_depth", args.max_depth),
+            ("input_dir", args.input_dir),
+            ("sitemaps_seen", crawler.sitemaps_seen),
             ("pages_visited", crawler.visited),
             ("links_skipped", [{"url": u, "reason": r} for u, r in crawler.skipped]),
             ("errors", [{"url": u, "error": e} for u, e in crawler.errors]),
             ("seed_nodes", len(seed_records)),
-            ("crawl_nodes", len(crawl_records)),
+            ("local_nodes", len(local_records)),
+            ("crawl_html_nodes", len(crawl_records) - len(crawler.json_records)),
+            ("crawl_json_nodes", len(crawler.json_records)),
             ("total_nodes", len(records)),
             ("nodes_by_type", dict(by_type)),
             ("schema_validation_errors", validation_errors),
@@ -1390,7 +1648,8 @@ def main(argv: Optional[List[str]] = None) -> int:
     print(f"الصفحات التي تمت زيارتها : {len(crawler.visited)}")
     print(f"الروابط التي تم تجاهلها  : {len(crawler.skipped)}")
     print(f"عقد البذرة الهيكلية      : {len(seed_records)}")
-    print(f"عقد مستخرجة من الويب     : {len(crawl_records)}")
+    print(f"عقد من ملفات محلية       : {len(local_records)}")
+    print(f"عقد من الزحف (HTML+JSON) : {len(crawl_records)}")
     print(f"إجمالي العقد            : {len(records)}")
     print(f"أخطاء مخطط schema        : {validation_errors}")
     print("\nالعقد حسب node_type:")

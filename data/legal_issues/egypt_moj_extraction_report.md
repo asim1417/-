@@ -1,12 +1,12 @@
 # تقرير استخراج شجرة المسائل القانونية — الموسوعة القانونية المصرية
 
-- التاريخ: 2026-06-20 01:56:27
+- التاريخ: 2026-06-20 02:49:32
 - المصدر: Egyptian Legal Encyclopedia (EG)
 - روابط البداية: https://w.emj-eg.com/, https://serviceapi.egyptianlaws.com/
 
 ## ملخص التشغيل
 - عدد الصفحات التي تمت زيارتها: **0**
-- عدد الروابط التي تم تجاهلها: **2**
+- عدد الروابط التي تم تجاهلها: **4**
 - عدد العقد المستخرجة: **57**
 - عدد أخطاء التحقق من المخطط (schema): **0**
 
@@ -39,6 +39,8 @@
 ## الروابط المتجاهَلة (عينة)
 - `robots_disallow` — https://w.emj-eg.com/
 - `robots_disallow` — https://serviceapi.egyptianlaws.com/
+- `robots_disallow` — https://w.emj-eg.com/sitemap.xml
+- `robots_disallow` — https://serviceapi.egyptianlaws.com/sitemap.xml
 
 ## الأخطاء
 - لا توجد أخطاء مسجّلة.
