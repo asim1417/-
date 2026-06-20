@@ -1,6 +1,6 @@
 # تقرير استخراج شجرة المسائل القانونية — الموسوعة القانونية المصرية
 
-- التاريخ: 2026-06-20 02:49:32
+- التاريخ: 2026-06-20 02:54:42
 - المصدر: Egyptian Legal Encyclopedia (EG)
 - روابط البداية: https://w.emj-eg.com/, https://serviceapi.egyptianlaws.com/
 

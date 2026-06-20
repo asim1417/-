@@ -1,0 +1,33 @@
+{
+  "_note": "بنية عامة متحقَّق منها عبر فهرس محركات البحث (عناوين وروابط عامة فقط). جلب أجسام الصفحات محجوب بجدار حماية الموقع (HTTP 403) لأي جالب آلي، وهو ما نحترمه ولا نتجاوزه. هذه الروابط للتأريخ والاستشهاد كأدلة، لا كمحتوى مسحوب.",
+  "verified_via": "WebSearch public index (June 2026)",
+  "source": "الموسوعة القانونية لوزارة العدل المصرية",
+  "primary_hosts": [
+    "https://w.emj-eg.com/",
+    "https://emj-eg.com/",
+    "https://m.emj-eg.com/",
+    "https://p.w.emj-eg.com/"
+  ],
+  "search_endpoints": [
+    "https://w.emj-eg.com/AhkamSerach"
+  ],
+  "judgments_encyclopedia_index": {
+    "pattern": "https://w.emj-eg.com/AhkamT/Index?id={id}",
+    "verified_ids": {
+      "1": "أحكام النقض المدني",
+      "2": "أحكام النقض الجنائي",
+      "4": "أحكام الدستورية العليا",
+      "6": "المحكمة الإدارية العليا",
+      "7": "محكمة القضاء الإداري"
+    },
+    "unresolved_ids": ["3", "5"]
+  },
+  "related_public_sources": {
+    "النيابة العامة": "https://eg-pp.com/ (ExpanSingleTash?Tash_id={id})",
+    "بوابة التشريعات المصرية": "https://elpai.idsc.gov.eg/",
+    "موسوعة التشريعات (laweg)": "https://www.laweg.net/Default.aspx?action=Leglisations",
+    "موسوعة التشريعات والأحكام (laa-eg)": "https://www.laa-eg.com/Sections/Users/EgyptEncyc"
+  },
+  "official_scope_description": "تشمل أحكام النقض المدني والجنائي، والدستورية العليا، والإدارية العليا، والقضاء الإداري، وفتاوى الجمعية العمومية لقسمي الفتوى والتشريع، مع استخلاص المبدأ القانوني من كل حكم وربطه بالتشريعات والأوصاف والحيثيات والدفوع المدنية والجنائية.",
+  "access_note": "الجلب الآلي المباشر يُرجِع HTTP 403 (حماية WAF). الاستخراج الكامل لأجسام الصفحات يتطلب متصفحًا بشريًا أو بيئة مصرّح لها، مع احترام شروط الموقع وعدم تجاوز تسجيل الدخول أو المحتوى المدفوع."
+}

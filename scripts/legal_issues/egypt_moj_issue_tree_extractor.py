@@ -621,9 +621,11 @@ SEED_TREE: Dict[str, Any] = {
         },
         {
             "title": "موسوعة الأحكام",
+            "url": "https://w.emj-eg.com/",
             "children": [
                 {
                     "title": "أحكام النقض المدني",
+                    "url": "https://w.emj-eg.com/AhkamT/Index?id=1",
                     "children": [
                         {"title": "مبادئ النقض المدني"},
                         {"title": "نماذج أحكام مدنية"},
@@ -631,14 +633,24 @@ SEED_TREE: Dict[str, Any] = {
                 },
                 {
                     "title": "أحكام النقض الجنائي",
+                    "url": "https://w.emj-eg.com/AhkamT/Index?id=2",
                     "children": [
                         {"title": "مبادئ النقض الجنائي"},
                         {"title": "نماذج أحكام جنائية"},
                     ],
                 },
-                {"title": "أحكام الدستورية العليا"},
-                {"title": "المحكمة الإدارية العليا"},
-                {"title": "القضاء الإداري"},
+                {
+                    "title": "أحكام الدستورية العليا",
+                    "url": "https://w.emj-eg.com/AhkamT/Index?id=4",
+                },
+                {
+                    "title": "المحكمة الإدارية العليا",
+                    "url": "https://w.emj-eg.com/AhkamT/Index?id=6",
+                },
+                {
+                    "title": "محكمة القضاء الإداري",
+                    "url": "https://w.emj-eg.com/AhkamT/Index?id=7",
+                },
                 {"title": "فتاوى مجلس الدولة"},
                 {
                     "title": "الحيثيات",
@@ -735,17 +747,23 @@ def iter_seed_records(
     branch: str = "",
     source_url: str = "seed://egypt_moj_structural_seed",
 ) -> Iterable[Tuple["OrderedDict[str, Any]", Dict[str, Any]]]:
-    """مرور تكراري على البذرة، يُنتج (سجل مسطّح، عقدة الشجرة) لكل عنصر."""
+    """مرور تكراري على البذرة، يُنتج (سجل مسطّح، عقدة الشجرة) لكل عنصر.
+
+    إن حملت العقدة مفتاح "url" (رابط عام متحقَّق منه) فيُستخدم كـ source_url
+    ودليل أقوى (selector = "public_index")؛ وإلا فهي بذرة هيكلية (selector = "seed").
+    الأبناء يرثون أقرب رابط متحقَّق من أسلافهم ما لم يحملوا رابطًا خاصًا بهم.
+    """
     title = node["title"]
     current_branch = title if level == 1 else branch
-    selector = "seed"
+    node_url = node.get("url", source_url)
+    selector = "public_index" if node.get("url") else "seed"
 
     record = build_node_record(
         title=title,
         level=level,
         branch=current_branch if level >= 1 else "",
         parent_title=parent_title,
-        source_url=source_url,
+        source_url=node_url,
         selector=selector,
         text_snippet=title,
     )
@@ -757,7 +775,7 @@ def iter_seed_records(
             level=level + 1,
             parent_title=title,
             branch=current_branch,
-            source_url=source_url,
+            source_url=node_url,
         )
 
 
@@ -1311,17 +1329,19 @@ def enrich_tree(
     level: int = 0,
     parent_title: str = "",
     branch: str = "",
+    source_url: str = "seed://egypt_moj_structural_seed",
 ) -> "OrderedDict[str, Any]":
     """تحويل بذرة الشجرة إلى شجرة مُثراة بكل حقول المواءمة + الأبناء."""
     title = node["title"]
     current_branch = title if level == 1 else branch
+    node_url = node.get("url", source_url)
     record = build_node_record(
         title=title,
         level=level,
         branch=current_branch if level >= 1 else "",
         parent_title=parent_title,
-        source_url="seed://egypt_moj_structural_seed",
-        selector="seed",
+        source_url=node_url,
+        selector="public_index" if node.get("url") else "seed",
         text_snippet=title,
     )
     out: "OrderedDict[str, Any]" = OrderedDict()
@@ -1330,13 +1350,15 @@ def enrich_tree(
     out["level"] = level
     out["node_type"] = record["node_type"]
     out["branch"] = record["branch"]
+    out["source_url"] = node_url
     out["suggested_saudi_domain"] = record["suggested_saudi_domain"]
     out["suggested_hakeem_issue_path"] = record["suggested_hakeem_issue_path"]
     out["confidence"] = record["confidence"]
     out["needs_human_review"] = record["needs_human_review"]
     out["children"] = [
         enrich_tree(
-            child, level=level + 1, parent_title=title, branch=current_branch
+            child, level=level + 1, parent_title=title, branch=current_branch,
+            source_url=node_url,
         )
         for child in node.get("children", [])
     ]
