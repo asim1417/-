@@ -222,6 +222,106 @@ def test_blocked_pattern_filter():
     assert not crawler.is_allowed_domain("https://evil.example.com/x")
 
 
+# --------------------------------------------------------------------------- #
+# HTML parser + crawl pipeline (offline fixture)
+#
+# يتحقق من أن مُحلّل HTML يلتقط الفهارس العامة كما هو مصمم، دون أي شبكة،
+# عبر تمرير صفحة فهرس تمثيلية تشبه بنية الموسوعة القانونية المصرية.
+# --------------------------------------------------------------------------- #
+
+_FIXTURE_HTML = """
+<html lang="ar" dir="rtl">
+<head><title>الموسوعة القانونية المصرية - فهرس الأقسام</title></head>
+<body>
+  <nav class="breadcrumb">
+    <ol>
+      <li>الرئيسية</li>
+      <li>الموسوعة المدنية</li>
+      <li>الدفوع</li>
+    </ol>
+  </nav>
+  <h1>الموسوعة المدنية</h1>
+  <h2>الدفوع المدنية</h2>
+  <h3>البطلان والمواعيد المدنية</h3>
+  <ul class="menu">
+    <li><a href="/encyclopedia/civil/defenses/inadmissibility">الدفع بعدم القبول</a></li>
+    <li><a href="/encyclopedia/civil/defenses/jurisdiction">الدفع بعدم الاختصاص</a></li>
+    <li><a href="/encyclopedia/prosecution/classification/misdemeanors">قيود وأوصاف الجنح</a></li>
+    <li><a href="/encyclopedia/inheritance">قواعد المواريث</a></li>
+    <li><a href="/login">تسجيل الدخول</a></li>
+    <li><a href="/about">عن الموقع</a></li>
+  </ul>
+</body>
+</html>
+"""
+
+
+def _parse_fixture():
+    p = ex.StructureParser()
+    p.feed(_FIXTURE_HTML)
+    return p
+
+
+def test_parser_extracts_title_and_headings():
+    p = _parse_fixture()
+    assert "الموسوعة القانونية المصرية" in p.title
+    tags = {tag for tag, _ in p.headings}
+    texts = [t for _, t in p.headings]
+    assert {"h1", "h2", "h3"} <= tags
+    assert "الدفوع المدنية" in texts
+
+
+def test_parser_extracts_breadcrumbs_and_links_and_menu():
+    p = _parse_fixture()
+    assert "الدفوع" in p.breadcrumbs
+    assert "الموسوعة المدنية" in p.breadcrumbs
+    link_texts = [t for _, t in p.links]
+    assert "الدفع بعدم القبول" in link_texts
+    # عناصر القائمة تُلتقط أيضًا كعناصر li
+    assert any("قيود وأوصاف الجنح" in li for li in p.list_items)
+
+
+def test_crawl_pipeline_offline_produces_valid_records():
+    # محاكاة نتيجة صفحة مزحوفة دون شبكة، ثم تمريرها بنفس مسار الزحف الحي
+    p = _parse_fixture()
+    page = {
+        "url": "https://w.emj-eg.com/encyclopedia/civil/defenses",
+        "title": p.title,
+        "headings": p.headings,
+        "list_items": p.list_items,
+        "links": p.links,
+        "breadcrumbs": p.breadcrumbs,
+    }
+    records = ex.crawl_results_to_records([page])
+    assert records, "يجب أن ينتج المسار عقدًا قانونية من الفهرس العام"
+    for r in records:
+        assert ex.validate_record(r) == []
+        assert r["source_url"].startswith("https://w.emj-eg.com/")
+        assert r["evidence"]["selector"] in ("h1", "h2", "h3", "menu", "link")
+
+    titles = {r["node_title"] for r in records}
+    # عناوين قانونية واضحة يجب أن تُلتقط وتُصنّف
+    assert "الدفع بعدم القبول" in titles
+    assert "قيود وأوصاف الجنح" in titles
+    types = {r["node_title"]: r["node_type"] for r in records}
+    assert types["قيود وأوصاف الجنح"] == "criminal_classification"
+
+    # الروابط/العناوين غير القانونية (تسجيل الدخول، عن الموقع) تُستبعد
+    assert "تسجيل الدخول" not in titles
+    assert "عن الموقع" not in titles
+
+
+def test_blocked_links_not_enqueued_in_pipeline():
+    # رابط فيه نمط محظور يجب ألا يُصنّف ضمن العقد حتى لو ظهر كنص قانوني
+    crawler = ex.SafeCrawler(
+        allowed_domains=["w.emj-eg.com"],
+        blocked_patterns=ex.DEFAULT_BLOCKED_PATTERNS,
+        max_pages=5, delay=0, timeout=5,
+    )
+    assert crawler.is_blocked("https://w.emj-eg.com/account/defenses")
+    assert not crawler.is_blocked("https://w.emj-eg.com/encyclopedia/defenses")
+
+
 if __name__ == "__main__":
     import traceback
 
