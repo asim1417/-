@@ -1,0 +1,10 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: miftah
+      POSTGRES_PASSWORD: miftah
+      POSTGRES_DB: miftah
+    ports: ["5432:5432"]
+    volumes: ["miftahdb:/var/lib/postgresql/data"]
+volumes: { miftahdb: {} }

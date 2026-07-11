@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══ هوية MedKey Gulf — توكنز رسمية ═══ */
+:root{
+  --ink:#14313F;          /* Deep Ink — النصوص الرئيسية */
+  --paper:#F7FCFF;        /* Snow Blue — خلفية التطبيق */
+  --surface:#FFFFFF;      /* White — البطاقات */
+  --mint:#DDF4FF;         /* Warm Sky — بطاقات/رقاقات هادئة */
+  --line:#E9F2F7;         /* Mist Gray — الحدود */
+  --slate:#5C7480;        /* نص ثانوي مريح */
+  --teal:#2D6F8E;         /* Trust Blue — العناوين والتأكيد */
+  --primary:#6CB7D8;      /* Learning Blue — الأزرار والروابط */
+  --gulf:#A7D8F0;         /* Gulf Blue — اللون العاطفي */
+  --sand:#F6E3B4;         /* Warm Sand — لمسة خفيفة (5%) */
+  --ok:#2E8B67; --mintbg:#CFEFEA; /* Soft Mint — نجاح/تقدم */
+  --danger:#C0553B;
+  --gold:var(--primary); --gold-soft:var(--gulf); /* توافق خلفي */
+  --shadow:0 10px 30px -18px rgba(45,111,142,.28);
+  --r:22px;
+}
+[data-theme="dark"]{
+  --ink:#EAF4F8; --paper:#0E2530; --surface:#14313F; --mint:#173A48; --line:#20404E;
+  --slate:#9FB6C0; --teal:#8FD0E6; --primary:#6CB7D8; --gulf:#3E7E9C; --sand:#C9AE6E;
+  --ok:#66C39A; --mintbg:#1B3E3A; --danger:#E08466;
+  --shadow:0 12px 34px -18px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body),system-ui,sans-serif;
+  line-height:1.8;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+h1,h2,h3,h4,.brand{font-family:var(--font-display),sans-serif;letter-spacing:-.01em}
+a{color:inherit}
+
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:90px;position:relative;background:var(--paper)}
+.topbar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 86%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);display:flex;align-items:center;
+  justify-content:space-between;padding:12px 18px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand img{width:38px;height:38px;border-radius:11px}
+.brand .bt{display:flex;flex-direction:column;line-height:1.15}
+.brand .bt b{font-weight:700;font-size:16px;color:var(--ink)}
+.brand .bt span{font-size:9.5px;letter-spacing:.16em;color:var(--primary);font-family:var(--font-en)}
+.icon-btn{width:38px;height:38px;border:1px solid var(--line);background:var(--surface);border-radius:11px;
+  display:grid;place-items:center;cursor:pointer;font-size:17px;color:var(--ink)}
+
+.screen{padding:20px 18px 8px}
+.eyebrow{color:var(--teal);font-weight:600;font-size:12.5px;letter-spacing:.04em}
+.muted{color:var(--slate)}
+.h-lg{font-size:23px;margin:4px 0 6px;color:var(--ink)}
+.section-title{font-size:15px;font-weight:700;margin:22px 4px 12px;display:flex;align-items:center;justify-content:space-between;color:var(--ink)}
+.section-title a{color:var(--primary);font-size:12.5px;text-decoration:none}
+
+/* Hero — Gulf Horizon هادئ على خلفية فاتحة */
+.hero{background:linear-gradient(150deg,#EAF7FF 0%,var(--gulf) 60%,var(--primary) 100%);
+  color:var(--ink);border-radius:26px;padding:26px 22px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+[data-theme="dark"] .hero{background:linear-gradient(150deg,#173A48,#2D6F8E)}
+.hero:before{content:"";position:absolute;inset-inline-start:-50px;top:-50px;width:170px;height:170px;
+  background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%);border-radius:50%}
+.hero .k{font-family:var(--font-display);font-size:25px;font-weight:700;line-height:1.45;position:relative;color:var(--ink)}
+[data-theme="dark"] .hero .k{color:#fff}
+.hero p{opacity:.92;margin-top:10px;font-size:13.5px;position:relative;color:var(--teal)}
+[data-theme="dark"] .hero p{color:#DDF4FF}
+
+.cta{margin-top:18px;display:inline-flex;gap:8px;align-items:center;background:var(--primary);color:#fff;
+  font-weight:700;border:none;padding:12px 22px;border-radius:14px;cursor:pointer;font-size:14px;
+  position:relative;text-decoration:none;font-family:var(--font-body);box-shadow:0 6px 16px -8px rgba(108,183,216,.8)}
+.cta.full{width:100%;justify-content:center}
+.cta.teal{background:var(--teal);box-shadow:none}
+
+.keyday{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-top:16px;box-shadow:var(--shadow)}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--sand);color:#7a5f1e;font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px}
+.keyday h3{font-size:17px;margin-top:10px;color:var(--ink)}
+.keyday .en{color:var(--teal);font-weight:600;font-size:13px;margin-top:2px;font-family:var(--font-en)}
+.keyday p{font-size:13px;color:var(--slate);margin-top:8px}
+
+.stats{display:flex;gap:12px;margin-top:16px}
+.stat{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.stat b{display:block;font-family:var(--font-display);font-size:22px;color:var(--teal)}
+.stat span{font-size:11.5px;color:var(--slate)}
+
+.paths{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.path{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:15px;cursor:pointer;transition:.2s;text-decoration:none;display:block}
+.path:hover{transform:translateY(-2px);border-color:var(--primary);box-shadow:var(--shadow)}
+.path .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;background:var(--mint);color:var(--teal);margin-bottom:10px}
+.path h4{font-size:14px;font-weight:600;color:var(--ink)}
+.path small{color:var(--slate);font-size:11.5px}
+.bar{height:6px;background:var(--mint);border-radius:20px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gulf),var(--primary));border-radius:20px}
+
+.key-item{display:flex;gap:13px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px;margin-bottom:11px;cursor:pointer;transition:.2s;text-decoration:none}
+.key-item:hover{border-color:var(--primary);box-shadow:var(--shadow)}
+.key-num{width:36px;height:36px;flex:none;border-radius:11px;display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:#fff;
+  background:linear-gradient(150deg,var(--gulf),var(--primary) 55%,var(--teal))}
+.key-item .en{font-family:var(--font-en);font-weight:600;font-size:14px;color:var(--ink)}
+.key-item .ar{font-size:12.5px;color:var(--slate);margin-top:2px}
+
+.lesson-block{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:11px}
+.lb-head{display:flex;align-items:center;gap:9px;font-weight:700;font-size:13.5px;color:var(--teal)}
+.lb-head .n{width:26px;height:26px;background:var(--mint);border-radius:8px;display:grid;place-items:center;font-size:12px;font-family:var(--font-display)}
+.lesson-block p{font-size:13.5px;margin-top:9px;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chip{background:var(--mint);color:var(--teal);font-size:11.5px;padding:5px 11px;border-radius:20px;font-weight:500}
+.chip.en{font-family:var(--font-en);color:var(--teal)}
+.hy{background:#FEF9EC;border:1px solid var(--sand);border-radius:14px;padding:13px;margin-top:9px}
+[data-theme="dark"] .hy{background:#2A2717;border-color:#4A421F}
+.hy li{font-size:12.5px;margin-inline-start:16px;margin-top:4px;color:var(--ink)}
+.mistake{color:var(--danger);font-size:12.5px;display:flex;gap:7px;margin-top:6px}
+.map{background:var(--surface);border:1px dashed var(--gulf);border-radius:14px;padding:16px;margin-top:9px;text-align:center;font-family:var(--font-en);font-size:12.5px;line-height:2.4}
+.map .node{display:inline-block;background:var(--mint);color:var(--teal);padding:4px 11px;border-radius:9px;margin:2px}
+.map .arrow{color:var(--primary);font-weight:700}
+.src-note{font-size:11px;text-align:center;margin-top:10px;color:var(--slate)}
+
+.back-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--primary);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:6px;text-decoration:none;font-family:var(--font-body)}
+
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;
+  background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  display:flex;justify-content:space-around;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:30}
+.tab{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--slate);font-size:10.5px;padding:5px 0;text-decoration:none;font-family:var(--font-body)}
+.tab .ti{font-size:19px}
+.tab.active{color:var(--primary)}

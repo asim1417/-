@@ -1,0 +1,402 @@
+// ═══════════════════════════════════════════════════════════════════
+//  مِفتاح الطب — مخطط قاعدة البيانات (PostgreSQL + pgvector)
+//  27 جدولًا وفق وثيقة الرؤية. البحث الدلالي عبر عمود embedding.
+// ═══════════════════════════════════════════════════════════════════
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+// ─────────────────────────── المستخدمون ───────────────────────────
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String?
+  passwordHash   String?
+  provider       String   @default("email") // email | google | apple | sso
+  role           Role     @default(STUDENT)
+  createdAt      DateTime @default(now())
+  profile        StudentProfile?
+  attempts       StudentAttempt[]
+  progress       ProgressTracking[]
+  weaknesses     WeaknessProfile[]
+  reviews        ReviewSchedule[]
+  conversations  AiConversation[]
+  subscription   Subscription?
+  payments       Payment[]
+  contentReviews ContentReview[]
+}
+
+enum Role {
+  STUDENT
+  REVIEWER   // مراجع علمي
+  EDITOR     // محرر محتوى
+  ADMIN
+}
+
+model StudentProfile {
+  id           String      @id @default(cuid())
+  userId       String      @unique
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  universityId String?
+  university   University?  @relation(fields: [universityId], references: [id])
+  programId    String?
+  program      MedicalProgram? @relation(fields: [programId], references: [id])
+  yearLevel    Int         @default(1)
+  language     String      @default("ar")     // ar | en
+  placementScore Int?                          // نتيجة اختبار تحديد المستوى
+  streakDays   Int         @default(0)
+  xp           Int         @default(0)
+  badges       String[]    @default([])
+  createdAt    DateTime    @default(now())
+}
+
+model University {
+  id        String   @id @default(cuid())
+  name      String
+  nameEn    String?
+  country   String   @default("SA")           // SA KW AE QA BH OM
+  city      String?
+  programs  MedicalProgram[]
+  students  StudentProfile[]
+}
+
+model MedicalProgram {
+  id           String   @id @default(cuid())
+  name         String                          // بكالوريوس الطب والجراحة
+  universityId String
+  university   University @relation(fields: [universityId], references: [id])
+  framework    String?                         // SaudiMED | WFME
+  students     StudentProfile[]
+  courses      Course[]
+}
+
+// ─────────────────────── المناهج والدروس ───────────────────────
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String                           // General Physiology
+  titleAr     String
+  description String?
+  icon        String?
+  orderIndex  Int      @default(0)
+  programId   String?
+  program     MedicalProgram? @relation(fields: [programId], references: [id])
+  modules     Module[]
+  paths       LearningPath[]
+}
+
+model Module {
+  id         String   @id @default(cuid())
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title      String
+  titleAr    String
+  orderIndex Int      @default(0)
+  lessons    Lesson[]
+}
+
+model Lesson {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  moduleId       String?
+  module         Module?  @relation(fields: [moduleId], references: [id])
+  courseSlug     String                          // لعرض سريع دون join
+  title          String
+  titleEn        String?
+  orderIndex     Int      @default(0)
+  // بنية الدرس الـ14
+  whyItMatters   String   @db.Text
+  bigIdea        String   @db.Text
+  explanationAr  String   @db.Text
+  clinical       String   @db.Text              // Clinical correlation مبكر
+  highYield      String[] @default([])
+  commonMistakes String[] @default([])
+  summary60      String   @db.Text              // ملخص 60 ثانية
+  isHighYield    Boolean  @default(false)
+  concepts       LessonConcept[]
+  terms          LessonTerm[]
+  maps           ConceptMap[]
+  flashcards     Flashcard[]
+  questions      Question[]
+  citations      Citation[]
+  progress       ProgressTracking[]
+}
+
+// ────────────────────── المفاهيم والمفاتيح ──────────────────────
+model Concept {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  titleEn     String?
+  isKey       Boolean  @default(false)          // من «مفاتيح الطب» الـ16
+  keyIndex    Int?                              // ترتيب المفتاح 1..16
+  summary     String   @db.Text
+  lessons     LessonConcept[]
+  maps        ConceptMap[]
+  questions   Question[]
+  weaknesses  WeaknessProfile[]
+}
+
+model LessonConcept {
+  lessonId  String
+  conceptId String
+  lesson    Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  concept   Concept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  @@id([lessonId, conceptId])
+}
+
+model ConceptMap {
+  id        String   @id @default(cuid())
+  lessonId  String?
+  lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+  conceptId String?
+  concept   Concept? @relation(fields: [conceptId], references: [id])
+  title     String
+  nodes     Json                                // [{id,label}]
+  edges     Json                                // [{from,to,label}]
+}
+
+// ───────────────────── المصطلحات الطبية ─────────────────────
+model MedicalTerm {
+  id           String   @id @default(cuid())
+  termEn       String
+  termAr       String
+  root         String?                          // الجذر اللغوي
+  meaning      String   @db.Text
+  example      String?
+  lessons      LessonTerm[]
+}
+
+model LessonTerm {
+  lessonId String
+  termId   String
+  lesson   Lesson      @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  term     MedicalTerm @relation(fields: [termId], references: [id], onDelete: Cascade)
+  @@id([lessonId, termId])
+}
+
+// ─────────────────── بطاقات المراجعة والأسئلة ───────────────────
+model Flashcard {
+  id        String   @id @default(cuid())
+  lessonId  String?
+  lesson    Lesson?  @relation(fields: [lessonId], references: [id])
+  front     String   @db.Text
+  back      String   @db.Text
+  reviews   ReviewSchedule[]
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  lessonId    String?
+  lesson      Lesson?  @relation(fields: [lessonId], references: [id])
+  conceptId   String?
+  concept     Concept? @relation(fields: [conceptId], references: [id])
+  stem        String   @db.Text
+  type        QType    @default(RECALL)
+  difficulty  Int      @default(1)              // 1..5
+  subject     String
+  isHighYield Boolean  @default(false)
+  options     AnswerOption[]
+  explanation QuestionExplanation?
+  attempts    StudentAttempt[]
+  reviews     ContentReview[]
+  qualityScore Float?                           // نظام تقييم جودة السؤال
+  approved     Boolean  @default(false)         // بوابة: لا يُخدَم للطالب إلا بعد اعتماد
+  reviewStatus String   @default("pending")     // pending | approved | rejected
+  citations   Citation[]
+}
+
+enum QType {
+  RECALL
+  UNDERSTANDING
+  APPLICATION
+  CLINICAL_VIGNETTE
+  IMAGE_BASED
+  MATCHING
+  SHORT_ANSWER
+}
+
+model AnswerOption {
+  id         String   @id @default(cuid())
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  label      String                             // أ ب ج د
+  text       String   @db.Text
+  isCorrect  Boolean  @default(false)
+  whyWrong   String?  @db.Text                  // سبب خطأ الخيار
+}
+
+model QuestionExplanation {
+  id           String   @id @default(cuid())
+  questionId   String   @unique
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  whyCorrect   String   @db.Text
+  teachingPoint String? @db.Text
+}
+
+// ────────────────── تتبع الطالب والتكرار الذكي ──────────────────
+model StudentAttempt {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id])
+  chosenId   String?
+  correct    Boolean
+  timeMs     Int?
+  createdAt  DateTime @default(now())
+}
+
+model LearningPath {
+  id        String   @id @default(cuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+  title     String
+  orderIndex Int     @default(0)
+}
+
+model ProgressTracking {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonId   String
+  lesson     Lesson   @relation(fields: [lessonId], references: [id])
+  status     String   @default("not_started")   // not_started | in_progress | completed
+  masteryPct Int      @default(0)
+  updatedAt  DateTime @updatedAt
+  @@unique([userId, lessonId])
+}
+
+model WeaknessProfile {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conceptId String
+  concept   Concept  @relation(fields: [conceptId], references: [id])
+  score     Float    @default(0)               // 0 قوي .. 1 ضعيف
+  updatedAt DateTime @updatedAt
+  @@unique([userId, conceptId])
+}
+
+// SM-2 spaced repetition
+model ReviewSchedule {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  flashcardId  String
+  flashcard    Flashcard @relation(fields: [flashcardId], references: [id])
+  easeFactor   Float    @default(2.5)
+  intervalDays Int      @default(0)
+  repetitions  Int      @default(0)
+  dueDate      DateTime @default(now())
+  @@unique([userId, flashcardId])
+}
+
+// ─────────────── المصادر المفتوحة والاستشهادات (RAG) ───────────────
+model SourceDocument {
+  id          String   @id @default(cuid())
+  provider    String                            // openstax | medlineplus | pubmed | pmc | who
+  externalId  String?                           // PMID / topic id / module id
+  title       String
+  url         String
+  license     String?                           // CC BY | Public Domain ...
+  fetchedAt   DateTime @default(now())
+  chunks      SourceChunk[]
+  citations   Citation[]
+  @@unique([provider, externalId])
+}
+
+model SourceChunk {
+  id         String   @id @default(cuid())
+  documentId String
+  document   SourceDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  ordinal    Int
+  text       String   @db.Text
+  tokens     Int?
+  // متجه البحث الدلالي — يُملأ عند تفعيل مزوّد التضمينات
+  embedding  Unsupported("vector(1024)")?
+  citations  Citation[]
+}
+
+model Citation {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    SourceDocument @relation(fields: [documentId], references: [id])
+  chunkId     String?
+  chunk       SourceChunk?   @relation(fields: [chunkId], references: [id])
+  lessonId    String?
+  lesson      Lesson?        @relation(fields: [lessonId], references: [id])
+  questionId  String?
+  question    Question?      @relation(fields: [questionId], references: [id])
+  quote       String?  @db.Text
+}
+
+// ─────────────── المرشد الطبي والتدقيق ───────────────
+model AiConversation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  messages  AiMessage[]
+}
+
+model AiMessage {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String                         // user | assistant
+  content        String   @db.Text
+  citedChunkIds  String[] @default([])          // سجل تدقيق: مصادر الإجابة
+  blocked        Boolean  @default(false)       // هل رُفض لسبب سلامة
+  createdAt      DateTime @default(now())
+}
+
+// ─────────────── الاشتراكات والإدارة والتدقيق ───────────────
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan      String   @default("free")           // free | pro
+  status    String   @default("active")
+  provider  String?                             // moyasar | hyperpay | stripe
+  renewsAt  DateTime?
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int                                 // بالهللة
+  currency  String   @default("SAR")
+  provider  String
+  status    String
+  createdAt DateTime @default(now())
+}
+
+model ContentReview {
+  id         String   @id @default(cuid())
+  reviewerId String
+  reviewer   User     @relation(fields: [reviewerId], references: [id])
+  questionId String?
+  question   Question? @relation(fields: [questionId], references: [id])
+  status     String   @default("pending")       // pending | approved | rejected
+  notes      String?  @db.Text
+  createdAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String?
+  action    String
+  target    String?
+  meta      Json?
+  createdAt DateTime @default(now())
+}
