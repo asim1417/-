@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import { Noto_Kufi_Arabic, Noto_Sans_Arabic, Inter } from "next/font/google";
+import { Inter, Noto_Kufi_Arabic, Noto_Sans_Arabic } from "next/font/google";
 import "./globals.css";
-import Shell from "@/components/Shell";
+import { LangProvider } from "@/lib/i18n";
 
-// خطوط هوية MedKey Gulf
-const display = Noto_Kufi_Arabic({ subsets: ["arabic"], weight: ["400", "500", "600", "700", "800"], variable: "--font-display", display: "swap" });
-const body = Noto_Sans_Arabic({ subsets: ["arabic"], weight: ["300", "400", "500", "600", "700"], variable: "--font-body", display: "swap" });
-const en = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-en", display: "swap" });
+const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--font-inter", display: "swap" });
+const kufi = Noto_Kufi_Arabic({ subsets: ["arabic"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--font-kufi", display: "swap" });
+const sansAr = Noto_Sans_Arabic({ subsets: ["arabic"], weight: ["400", "500", "600", "700", "800"], variable: "--font-sans-ar", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "مِفتاح الطب · MedKey Gulf",
-  description: "نفهمك الطب من جذوره — منصة تعليم طبي تأسيسي لطلاب السنة الأولى في السعودية والخليج.",
+  title: "MedKey Gulf · مِفتاح الطب",
+  description: "Unlock medicine from the very first year — a foundational medical-learning platform for first-year students across the Gulf.",
   icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={`${display.variable} ${body.variable} ${en.variable}`}>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${kufi.variable} ${sansAr.variable}`}>
       <body>
-        <Shell>{children}</Shell>
+        <LangProvider>{children}</LangProvider>
       </body>
     </html>
   );

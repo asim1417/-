@@ -1,0 +1,162 @@
+"use client";
+// ═══ i18n: EN (default) + AR, from the MedKey Gulf design handoff ═══
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+
+export type Dict = Record<string, string>;
+
+export const EN: Dict = {
+  tagline: "Unlock Medicine from Year One",
+  navHome: "Home", navPaths: "Paths", navLesson: "Lesson", navQuestions: "Question Bank", navCards: "Flashcards", navAssistant: "AI Assistant",
+  langSwitch: "العربية", userName: "Ahmed", userYear: "First Year",
+  dashKicker: "Student Dashboard", welcome: "Welcome back, Ahmed", welcomeSub: "Every day a step toward deeper understanding. Let's continue your path.", continueBtn: "Continue Learning",
+  todayPath: "Today's Path", todayProgress: "Today's progress", onTrack: "You're on track — 2 lessons left.", overall: "Overall progress",
+  resumeToday: "Resume Today", viewAll: "View all",
+  subjCell: "Cell Basics", nextOrganelles: "Next · Organelles", subjTissues: "Tissues & Cells", nextEpithelium: "Next · Epithelium", subjBiochem: "Biochemistry", nextEnzymes: "Next · Enzymes",
+  recentActivity: "Recent Activity",
+  act1: "Completed \"Cell Basics\" lesson", act1t: "10 minutes ago", act2: "Answered 10 questions in the bank", act2t: "1 hour ago", act3: "Finished a flashcard deck", act3t: "2 days ago",
+  statLessons: "lessons completed", statQuestions: "questions solved", statPaths: "active paths", statHours: "hours learned this week",
+  n68: "68%", n75: "75%", n40: "40%", n25: "25%", n60: "60%", n16: "16", n44: "44", n7: "7", n45: "4.5",
+  pathsTitle: "Choose Your Learning Path", pathsSub: "Designed to cover the first-year curriculum in a structured, connected way.",
+  filterAll: "All Paths", filterCore: "Core", filterSkills: "Skills", filterReview: "Review",
+  path1: "Medical Science Foundations", path1d: "An introduction to the core concepts of medical and biological sciences.",
+  path2: "The Cell & Tissues", path2d: "Focus on cell structure, function, and the different types of tissue.",
+  path3: "Biochemistry", path3d: "The essential concepts of biochemistry and the body's reactions.",
+  pathProgress: "Path progress", resume: "Resume", lessons12: "12 lessons", lessons10: "10 lessons", lessons8: "8 lessons",
+  lessonTitle: "Cell Components", lessonContent: "Lesson Content",
+  toc1: "Lesson intro", toc2: "The Nucleus", toc3: "Cell Organelles", toc4: "Cell Membrane", toc5: "Lesson summary",
+  lessonMeta: "Lesson · 12 min", lessonFig: "[ diagram: cell structure ]",
+  lessonBody: "Inside the cell are tiny structures called organelles, each performing a specific function much like the body's organs. Understanding each organelle's role helps you connect structure to function rather than memorizing them in isolation.",
+  keyLabel: "Lesson key:", lessonKey: "Mitochondria are the powerhouse — the more energy a cell needs, the more of them it holds. Function explains structure.",
+  prev: "Previous", next: "Next", lessonProgress: "Lesson progress",
+  qTitle: "Test Your Understanding", qAll: "All Questions", qByLesson: "By Lesson", qFav: "Favorites",
+  qProgress: "Bank progress", qSolved: "220 of 500 questions solved", qMeta: "Multiple choice · 1 / 250", qLevel: "Intermediate",
+  qQuestion: "Which of the following is a function of the mitochondria?",
+  qOptA: "Storing genetic information", qOptB: "Producing energy in the cell", qOptC: "Protein synthesis", qOptD: "Digesting large molecules",
+  qExplainLabel: "Explanation:", qExplain: "Mitochondria are the site of energy production in the cell, known as the cell's powerhouse.",
+  qSave: "Save answer", qNext: "Next question",
+  cardsTitle: "Review Smart with Flashcards", decks: "Decks", cards24: "24 cards", cards18: "18 cards", cards22: "22 cards", newDeck: "New deck",
+  tapToFlip: "Tap the card to flip it", cardCount: "8 of 24",
+  cardQ: "What is the function of ribosomes?", cardA: "An organelle responsible for protein synthesis within the cell.", sideQ: "Question", sideA: "Answer",
+  pastChats: "Past Conversations", chat1: "Explain cell division", chat2: "Difference between DNA and RNA", chat3: "Functions of proteins", newChat: "New conversation",
+  online: "Online now",
+  msg1: "Hi Ahmed! How can I help with your studies today?",
+  msg2: "Explain the difference between plant and animal cells.",
+  msg3: "Gladly! The key difference is that a plant cell has a cell wall and chloroplasts for photosynthesis, while an animal cell lacks both and contains centrioles that help with division.",
+  inputPlaceholder: "Type your question here…",
+  foot1: "Trusted medical content from verified sources", foot2: "Interactive learning experience", foot3: "Supporting Gulf students with local & international curricula",
+  navMap: "Concept Map",
+  fPages: "Pages", fApp: "Open App", fLanding: "Landing", fLogin: "Sign In", fMobile: "Mobile",
+  lnKicker: "Foundational Medical Learning · Gulf",
+  lnTitle: "Unlock medicine from the very first year.",
+  lnSub: "MedKey Gulf turns first-year medicine from scattered pressure into clear keys of understanding — concepts, maps, then questions.",
+  lnCta1: "Start Learning Free", lnCta2: "Explore Paths",
+  lnTrust: "Trusted by first-year students across the Gulf",
+  lnF1: "Concept-first learning", lnF1d: "Understand the big idea before the detail, so knowledge connects instead of piling up.",
+  lnF2: "Curated question bank", lnF2d: "500+ questions with clear explanations that test connection, not memorization.",
+  lnF3: "AI study companion", lnF3d: "Ask, clarify, and review any topic in plain Arabic with precise English terms.",
+  lnBandTitle: "Everything a first-year needs, in one calm place.",
+  lnBand1: "Learning paths", lnBand2: "Interactive lessons", lnBand3: "Smart flashcards", lnBand4: "Progress tracking",
+  lnFinalTitle: "Your first year, made clear.", lnFinalSub: "Join thousands of students building real understanding from day one.", lnFinalCta: "Create free account",
+  auBrandLine: "Unlock medicine from the first year, with keys of clear understanding.",
+  auTabLogin: "Sign In", auTabSignup: "Create Account",
+  auWelcome: "Welcome back", auWelcomeSub: "Sign in to continue your learning path.",
+  auStart: "Create your account", auStartSub: "Start your first-year journey today.",
+  auName: "Full name", auEmail: "Email", auPass: "Password", auNamePh: "Ahmed Al-Salem", auEmailPh: "you@example.com", auPassPh: "••••••••",
+  auForgot: "Forgot password?", auSubmitLogin: "Sign In", auSubmitSignup: "Create Account",
+  auAltLogin: "New to MedKey?", auAltSignup: "Already have an account?", auAltLoginLink: "Create an account", auAltSignupLink: "Sign in",
+  mapTitle: "Concept Map", mapSub: "See how a topic connects — from the whole to its parts.",
+  mapRoot: "The Cell", mapRootSub: "The basic unit of life",
+  mapB1: "Core Components", mapB2: "Cell Functions",
+  mapL1: "Cell Membrane", mapL2: "Cytoplasm", mapL3: "Nucleus", mapL4: "Energy Production", mapL5: "Protein Synthesis", mapL6: "Growth & Division",
+  mbTitle: "On Mobile", mbSub: "Built mobile-first — students open MedKey between lectures, in minutes.",
+  mbHome: "Home", mbLesson: "Lesson", mbQuiz: "Quiz",
+};
+
+export const AR: Dict = {
+  tagline: "افهم الطب من جذوره",
+  navHome: "الرئيسية", navPaths: "المسارات", navLesson: "الدرس", navQuestions: "بنك الأسئلة", navCards: "البطاقات", navAssistant: "المساعد الذكي",
+  langSwitch: "EN", userName: "أحمد", userYear: "السنة الأولى",
+  dashKicker: "لوحة الطالب", welcome: "مرحبًا بعودتك، أحمد", welcomeSub: "كل يوم خطوة نحو فهمٍ أعمق. لنُكمل مسارك اليوم.", continueBtn: "تابع التعلم",
+  todayPath: "مساري اليوم", todayProgress: "تقدمك اليوم", onTrack: "أنت على المسار الصحيح — تبقّى درسان.", overall: "التقدم العام",
+  resumeToday: "استكمل اليوم", viewAll: "عرض الكل",
+  subjCell: "أساسيات الخلية", nextOrganelles: "التالي · العضيّات", subjTissues: "الأنسجة والخلايا", nextEpithelium: "التالي · الظهارة", subjBiochem: "الكيمياء الحيوية", nextEnzymes: "التالي · الإنزيمات",
+  recentActivity: "آخر الأنشطة",
+  act1: "أكملت درس «أساسيات الخلية»", act1t: "منذ ١٠ دقائق", act2: "أجبت على ١٠ أسئلة في بنك الأسئلة", act2t: "منذ ساعة", act3: "أنهيت مجموعة بطاقات تعليمية", act3t: "منذ يومين",
+  statLessons: "درسًا مكتملًا", statQuestions: "سؤالًا تم حله", statPaths: "مسارات نشطة", statHours: "ساعات تعلم هذا الأسبوع",
+  n68: "٦٨٪", n75: "٧٥٪", n40: "٤٠٪", n25: "٢٥٪", n60: "٦٠٪", n16: "١٦", n44: "٤٤", n7: "٧", n45: "٤٫٥",
+  pathsTitle: "اختر مسارك التعليمي", pathsSub: "مصمّمة لتغطي منهج السنة الأولى بطريقة منظمة ومتكاملة.",
+  filterAll: "كل المسارات", filterCore: "أساسي", filterSkills: "مهارات", filterReview: "مراجعة",
+  path1: "أساسيات العلوم الطبية", path1d: "مدخل إلى المفاهيم الأساسية في العلوم الطبية والحيوية.",
+  path2: "الخلية والأنسجة", path2d: "تركيز على تركيب الخلية ووظائفها وأنواع الأنسجة المختلفة.",
+  path3: "الكيمياء الحيوية", path3d: "المفاهيم الأساسية للكيمياء الحيوية وتفاعلات الجسم.",
+  pathProgress: "تقدم المسار", resume: "تابع", lessons12: "١٢ درسًا", lessons10: "١٠ دروس", lessons8: "٨ دروس",
+  lessonTitle: "مكونات الخلية", lessonContent: "محتوى الدرس",
+  toc1: "مقدمة الدرس", toc2: "النواة", toc3: "العضيّات الخلوية", toc4: "الغشاء الخلوي", toc5: "تلخيص الدرس",
+  lessonMeta: "درس · ١٢ دقيقة", lessonFig: "[ رسم توضيحي: تركيب الخلية ]",
+  lessonBody: "توجد داخل الخلية بُنى دقيقة تُسمى العضيّات، تقوم كلٌ منها بوظيفة محددة تُشبه أعضاء الجسم. فهم دور كل عضيّة يساعدك على ربط التركيب بالوظيفة بدلًا من حفظها منفصلة.",
+  keyLabel: "مفتاح الدرس:", lessonKey: "الميتوكوندريا هي محطة الطاقة — كلما زادت حاجة الخلية للطاقة، زاد عددها. الوظيفة تفسّر البنية.",
+  prev: "السابق", next: "التالي", lessonProgress: "تقدم الدرس",
+  qTitle: "اختبر فهمك", qAll: "كل الأسئلة", qByLesson: "حسب الدرس", qFav: "المفضلة",
+  qProgress: "تقدمك في البنك", qSolved: "تم حل ٢٢٠ من ٥٠٠ سؤال", qMeta: "سؤال متعدد الخيارات · ٢٥٠ / ١", qLevel: "مستوى متوسط",
+  qQuestion: "أيٌّ ممّا يلي يُعدّ من وظائف الميتوكوندريا؟",
+  qOptA: "تخزين المعلومات الوراثية", qOptB: "إنتاج الطاقة في الخلية", qOptC: "تصنيع البروتين", qOptD: "هضم المواد الكبيرة",
+  qExplainLabel: "شرح الإجابة:", qExplain: "الميتوكوندريا هي موقع إنتاج الطاقة في الخلية، وتُعرف بـ«محطة طاقة الخلية».",
+  qSave: "حفظ الإجابة", qNext: "السؤال التالي",
+  cardsTitle: "راجع بذكاء عبر البطاقات", decks: "المجموعات", cards24: "٢٤ بطاقة", cards18: "١٨ بطاقة", cards22: "٢٢ بطاقة", newDeck: "مجموعة جديدة",
+  tapToFlip: "اضغط على البطاقة لقلبها", cardCount: "٨ من ٢٤",
+  cardQ: "ما هي وظيفة الرايبوسومات؟", cardA: "عضيّة مسؤولة عن تصنيع البروتين داخل الخلية.", sideQ: "السؤال", sideA: "الإجابة",
+  pastChats: "محادثات سابقة", chat1: "شرح الانقسام الخلوي", chat2: "الفرق بين DNA و RNA", chat3: "وظائف البروتينات", newChat: "محادثة جديدة",
+  online: "متصل الآن",
+  msg1: "مرحبًا أحمد! كيف يمكنني مساعدتك في مذاكرتك اليوم؟",
+  msg2: "اشرح لي الفرق بين الخلية النباتية والحيوانية.",
+  msg3: "بكل سرور! الفرق الجوهري أن الخلية النباتية تمتلك جدارًا خلويًا وبلاستيدات خضراء للبناء الضوئي، بينما تفتقر الخلية الحيوانية لهما وتحتوي على مريكزات تساعد في الانقسام.",
+  inputPlaceholder: "اكتب سؤالك هنا…",
+  foot1: "محتوى طبي موثوق من مصادر معتمدة", foot2: "تجربة تعلم تفاعلية", foot3: "يدعم طلاب الخليج بالمناهج المحلية والدولية",
+  navMap: "الخريطة المفاهيمية",
+  fPages: "الصفحات", fApp: "فتح المنصة", fLanding: "الصفحة التعريفية", fLogin: "تسجيل الدخول", fMobile: "الجوال",
+  lnKicker: "تعليم طبي تأسيسي · الخليج",
+  lnTitle: "افهم الطب من سنته الأولى.",
+  lnSub: "منصة MedKey Gulf تحوّل السنة الأولى من ضغطٍ مشتّت إلى مفاتيح فهم واضحة — مفهوم، ثم خريطة، ثم سؤال.",
+  lnCta1: "ابدأ التعلم مجانًا", lnCta2: "استكشف المسارات",
+  lnTrust: "يثق بها طلاب السنة الأولى في الخليج",
+  lnF1: "التعلم بالمفهوم أولًا", lnF1d: "افهم الفكرة الأم قبل التفاصيل، فيترابط العلم بدل أن يتكدّس.",
+  lnF2: "بنك أسئلة منتقى", lnF2d: "أكثر من ٥٠٠ سؤال بشرح واضح يختبر الربط لا الحفظ.",
+  lnF3: "رفيق مذاكرة ذكي", lnF3d: "اسأل واستوضح وراجع أي موضوع بعربية واضحة ومصطلحات إنجليزية دقيقة.",
+  lnBandTitle: "كل ما يحتاجه طالب السنة الأولى، في مكان واحد هادئ.",
+  lnBand1: "مسارات تعليمية", lnBand2: "دروس تفاعلية", lnBand3: "بطاقات ذكية", lnBand4: "متابعة التقدم",
+  lnFinalTitle: "سنتك الأولى، بوضوح.", lnFinalSub: "انضم لآلاف الطلاب الذين يبنون فهمًا حقيقيًا من اليوم الأول.", lnFinalCta: "أنشئ حسابًا مجانيًا",
+  auBrandLine: "افهم الطب من سنته الأولى، عبر مفاتيح فهمٍ واضحة.",
+  auTabLogin: "تسجيل الدخول", auTabSignup: "إنشاء حساب",
+  auWelcome: "مرحبًا بعودتك", auWelcomeSub: "سجّل الدخول لمتابعة مسارك التعليمي.",
+  auStart: "أنشئ حسابك", auStartSub: "ابدأ رحلة سنتك الأولى اليوم.",
+  auName: "الاسم الكامل", auEmail: "البريد الإلكتروني", auPass: "كلمة المرور", auNamePh: "أحمد السالم", auEmailPh: "you@example.com", auPassPh: "••••••••",
+  auForgot: "نسيت كلمة المرور؟", auSubmitLogin: "تسجيل الدخول", auSubmitSignup: "إنشاء حساب",
+  auAltLogin: "جديد في MedKey؟", auAltSignup: "لديك حساب بالفعل؟", auAltLoginLink: "أنشئ حسابًا", auAltSignupLink: "سجّل الدخول",
+  mapTitle: "الخريطة المفاهيمية", mapSub: "شاهد كيف يترابط الموضوع — من الكل إلى أجزائه.",
+  mapRoot: "الخلية", mapRootSub: "الوحدة الأساسية للحياة",
+  mapB1: "مكونات أساسية", mapB2: "وظائف الخلية",
+  mapL1: "الغشاء الخلوي", mapL2: "السيتوبلازم", mapL3: "النواة", mapL4: "إنتاج الطاقة", mapL5: "تصنيع البروتين", mapL6: "النمو والانقسام",
+  mbTitle: "على الجوال", mbSub: "مصمّمة للجوال أولًا — يفتح الطالب المنصة بين المحاضرات في دقائق.",
+  mbHome: "الرئيسية", mbLesson: "الدرس", mbQuiz: "اختبار",
+};
+
+type Ctx = { lang: "en" | "ar"; t: Dict; dir: "ltr" | "rtl"; isAr: boolean; toggleLang: () => void };
+const LangContext = createContext<Ctx | null>(null);
+
+export function LangProvider({ children }: { children: ReactNode }) {
+  const [lang, setLang] = useState<"en" | "ar">("en");
+  const isAr = lang === "ar";
+  const dir = isAr ? "rtl" : "ltr";
+  useEffect(() => {
+    document.documentElement.setAttribute("dir", dir);
+    document.documentElement.setAttribute("lang", lang);
+  }, [dir, lang]);
+  const value: Ctx = { lang, t: isAr ? AR : EN, dir, isAr, toggleLang: () => setLang((l) => (l === "ar" ? "en" : "ar")) };
+  return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
+}
+
+export function useLang(): Ctx {
+  const c = useContext(LangContext);
+  if (!c) throw new Error("useLang must be used within LangProvider");
+  return c;
+}
