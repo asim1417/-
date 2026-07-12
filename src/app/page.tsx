@@ -25,6 +25,20 @@ export default function Home() {
         <div className="stat"><b>{COURSES.length}</b><span>مسارًا</span></div>
       </div>
 
+      <div className="section-title">ابدأ رحلتك</div>
+      <div className="paths">
+        <Link className="path feat" href="/placement">
+          <div className="ic">🎯</div>
+          <h4>حدّد مستواك</h4>
+          <small>اختبار قصير يوجّهك لنقطة البداية</small>
+        </Link>
+        <Link className="path feat" href="/flashcards">
+          <div className="ic">🃏</div>
+          <h4>بطاقات SM-2</h4>
+          <small>تكرار متباعد يرسّخ ما تعلّمت</small>
+        </Link>
+      </div>
+
       <div className="section-title">دروس مختارة <Link href="/paths">كل المسارات</Link></div>
       <div className="paths">
         {featured.map((l) => (
