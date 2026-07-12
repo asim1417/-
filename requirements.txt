@@ -1,4 +1,0 @@
-streamlit
-easyocr
-pdf2image
-pillow

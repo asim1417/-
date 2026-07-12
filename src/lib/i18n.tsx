@@ -70,6 +70,20 @@ export const EN: Dict = {
   mapL1: "Cell Membrane", mapL2: "Cytoplasm", mapL3: "Nucleus", mapL4: "Energy Production", mapL5: "Protein Synthesis", mapL6: "Growth & Division",
   mbTitle: "On Mobile", mbSub: "Built mobile-first — students open MedKey between lectures, in minutes.",
   mbHome: "Home", mbLesson: "Lesson", mbQuiz: "Quiz",
+  // ── wired real-curriculum UI ──
+  keysTitle: "The 16 Keys of Medicine", keysSub: "Master these and first-year logic clicks into place.",
+  pathsRealTitle: "First-Year Curriculum", pathsRealSub: "16 keys · 17 tracks · one connected foundation.",
+  lessonsWord: "lessons", openLesson: "Open lesson", comingSoon: "Soon", available: "Ready",
+  lessonPick: "Lessons", whyItMatters: "Why it matters", bigIdea: "The big idea", explanation: "Explanation",
+  highYieldT: "High-yield points", commonMistakesT: "Common mistakes", keyTerms: "Key terms", clinicalT: "Clinical link",
+  summary60T: "60-second summary", sourcesT: "Sources", practiceThis: "Practice these questions",
+  qShowExplain: "Show explanation", qCorrect: "Correct answer", qWrong: "Not quite", qYourScore: "Score",
+  qRestart: "Restart", qFilterSubject: "Subject", qAllSubjects: "All", qDone: "answered", qWhy: "Why",
+  cardShow: "Show answer", cardAgain: "Again", cardGood: "Good", cardEasy: "Easy",
+  cardDue: "due now", cardAllDone: "All caught up — no cards due right now.", cardReset: "Reset review data",
+  cardFrom: "From", cardStudyAll: "Study all cards",
+  contentAr: "Medical content is shown in Arabic with precise English terms.",
+  demoNote: "Demo assistant — connect an API key to make it live.",
 };
 
 export const AR: Dict = {
@@ -138,6 +152,20 @@ export const AR: Dict = {
   mapL1: "الغشاء الخلوي", mapL2: "السيتوبلازم", mapL3: "النواة", mapL4: "إنتاج الطاقة", mapL5: "تصنيع البروتين", mapL6: "النمو والانقسام",
   mbTitle: "على الجوال", mbSub: "مصمّمة للجوال أولًا — يفتح الطالب المنصة بين المحاضرات في دقائق.",
   mbHome: "الرئيسية", mbLesson: "الدرس", mbQuiz: "اختبار",
+  // ── واجهة المنهج الحقيقي الموصول ──
+  keysTitle: "مفاتيح الطب الـ١٦", keysSub: "أتقنها ينتظم لك منطق السنة الأولى كله.",
+  pathsRealTitle: "منهج السنة الأولى", pathsRealSub: "١٦ مفتاحًا · ١٧ مسارًا · أساس واحد مترابط.",
+  lessonsWord: "دروس", openLesson: "افتح الدرس", comingSoon: "قريبًا", available: "متاح",
+  lessonPick: "الدروس", whyItMatters: "لماذا يهمّك", bigIdea: "الفكرة الأم", explanation: "الشرح",
+  highYieldT: "نقاط عالية العائد", commonMistakesT: "أخطاء شائعة", keyTerms: "مصطلحات مفتاحية", clinicalT: "الربط السريري",
+  summary60T: "تلخيص في ٦٠ ثانية", sourcesT: "المصادر", practiceThis: "تدرّب على هذه الأسئلة",
+  qShowExplain: "أظهر الشرح", qCorrect: "الإجابة الصحيحة", qWrong: "ليست دقيقة", qYourScore: "نتيجتك",
+  qRestart: "من جديد", qFilterSubject: "المادة", qAllSubjects: "الكل", qDone: "مُجاب", qWhy: "لماذا",
+  cardShow: "أظهر الإجابة", cardAgain: "أعِدها", cardGood: "جيّد", cardEasy: "سهل",
+  cardDue: "مستحقة الآن", cardAllDone: "أحسنت — لا بطاقات مستحقة الآن.", cardReset: "تصفير بيانات المراجعة",
+  cardFrom: "من درس", cardStudyAll: "ذاكر كل البطاقات",
+  contentAr: "المحتوى الطبي يُعرض بالعربية مع مصطلحات إنجليزية دقيقة.",
+  demoNote: "مساعد تجريبي — اربط مفتاح API لتشغيله فعليًا.",
 };
 
 type Ctx = { lang: "en" | "ar"; t: Dict; dir: "ltr" | "rtl"; isAr: boolean; toggleLang: () => void };
